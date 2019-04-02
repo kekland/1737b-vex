@@ -17,7 +17,14 @@ Motor driveRightBack = Motor(10, true, driveGearset);
 MotorGroup driveLeft = MotorGroup({driveLeftBack, driveLeftFront});
 MotorGroup driveRight = MotorGroup({driveLeftBack, driveLeftFront});
 
+
+Motor intake = Motor(4, false, AbstractMotor::gearset::green);
+Motor shooter = Motor(5, false, AbstractMotor::gearset::green);
+Motor shooterAngle = Motor(6, false, AbstractMotor::gearset::green);
+
 /* Higher-level stuff like ChassisControllers, Controllers, etc. */
 
 auto drivetrain = ChassisControllerFactory::create(driveLeft, driveRight, driveGearset, driveScales);
 auto masterController = Controller();
+
+auto shooterAngleController = AsyncControllerFactory::posIntegrated(shooterAngle, 200);

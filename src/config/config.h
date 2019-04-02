@@ -17,7 +17,12 @@ extern Motor driveRightBack;
 extern MotorGroup driveLeft;
 extern MotorGroup driveRight;
 
+extern Motor shooter;
+extern Motor intake;
+
 /* Higher-level stuff like ChassisControllers, Controllers, etc. */
 
 extern ChassisControllerIntegrated drivetrain;
 extern Controller masterController;
+
+extern AsyncPosIntegratedController shooterAngleController;
