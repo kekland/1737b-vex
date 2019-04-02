@@ -1,4 +1,4 @@
-#include "main.h";
+#include "main.h"
 
 using namespace okapi;
 
@@ -20,3 +20,4 @@ extern MotorGroup driveRight;
 /* Higher-level stuff like ChassisControllers, Controllers, etc. */
 
 extern ChassisControllerIntegrated drivetrain;
+extern Controller masterController;

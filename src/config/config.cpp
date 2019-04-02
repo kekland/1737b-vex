@@ -1,4 +1,4 @@
-#include "main.h";
+#include "main.h"
 
 using namespace okapi;
 
@@ -20,3 +20,4 @@ MotorGroup driveRight = MotorGroup({driveLeftBack, driveLeftFront});
 /* Higher-level stuff like ChassisControllers, Controllers, etc. */
 
 auto drivetrain = ChassisControllerFactory::create(driveLeft, driveRight, driveGearset, driveScales);
+auto masterController = Controller();
