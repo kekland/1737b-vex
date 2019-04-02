@@ -1,6 +1,5 @@
 #include "main.h"
 #include "../../global.h"
-#include "intake.h"
 
 double maxIntakeVelocity = 200.0;
 

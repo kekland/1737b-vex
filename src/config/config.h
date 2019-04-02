@@ -1,3 +1,6 @@
+#ifndef CONFIG_H_
+#define CONFIG_H_
+
 #include "main.h"
 
 using namespace okapi;
@@ -26,3 +29,5 @@ extern ChassisControllerIntegrated drivetrain;
 extern Controller masterController;
 
 extern AsyncPosIntegratedController shooterAngleController;
+
+#endif
