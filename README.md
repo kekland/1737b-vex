@@ -3,5 +3,6 @@
 A team from **Almaty, Kazakhstan**.
 See ya at Worlds!
 
-## Contact me
-E-Mail: `kk.erzhan@gmail.com`
+## Contact us
+- Main programmer: `kk.erzhan@gmail.com`
+- Second programmer: `john1q`
