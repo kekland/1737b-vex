@@ -22,9 +22,37 @@ void opcontrol()
     drivetrain.tank(masterController.getAnalog(ControllerAnalog::leftY),
                     masterController.getAnalog(ControllerAnalog::rightY));
 
-    if(masterController.getDigital(ControllerDigital::up)) {
+    if (masterController.getDigital(ControllerDigital::up))
+    {
       controlShooterAngle(ShooterAngle::upFlag);
     }
+    else if (masterController.getDigital(ControllerDigital::down))
+    {
+      controlShooterAngle(ShooterAngle::downFlag);
+    }
+
+    if (masterController.getDigital(ControllerDigital::R2))
+    {
+      controlShooter(ShooterState::shoot);
+    }
+    else
+    {
+      controlShooter(ShooterState::stop);
+    }
+
+    if (masterController.getDigital(ControllerDigital::L1))
+    {
+      controlIntake(IntakeDirection::up);
+    }
+    else if (masterController.getDigital(ControllerDigital::L2))
+    {
+      controlIntake(IntakeDirection::down);
+    }
+    else
+    {
+      controlIntake(IntakeDirection::stop);
+    }
+
     pros::delay(20);
   }
 }

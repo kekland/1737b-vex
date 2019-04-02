@@ -4,6 +4,7 @@
 enum IntakeDirection
 {
   up = 1,
+  stop = 0,
   down = -1,
 };
 
