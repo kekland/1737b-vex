@@ -7,6 +7,6 @@ enum IntakeDirection
   down = -1,
 };
 
-extern void control(IntakeDirection direction);
+extern void controlIntake(IntakeDirection direction);
 
 #endif

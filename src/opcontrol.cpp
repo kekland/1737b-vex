@@ -1,5 +1,4 @@
 #include "main.h"
-#include "global.h"
 
 using namespace okapi;
 
@@ -23,6 +22,9 @@ void opcontrol()
     drivetrain.tank(masterController.getAnalog(ControllerAnalog::leftY),
                     masterController.getAnalog(ControllerAnalog::rightY));
 
+    if(masterController.getDigital(ControllerDigital::up)) {
+      controlShooterAngle(ShooterAngle::upFlag);
+    }
     pros::delay(20);
   }
 }
