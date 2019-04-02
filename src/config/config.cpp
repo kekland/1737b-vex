@@ -1,4 +1,7 @@
 #include "main.h"
+#include "components/intake/basic_intake_controller.h";
+#include "components/shooter/basic_shooter_controller.h";
+#include "components/shooterAngle/basic_shooter_angle_controller.h";
 
 using namespace okapi;
 
@@ -17,14 +20,21 @@ Motor driveRightBack = Motor(10, true, driveGearset);
 MotorGroup driveLeft = MotorGroup({driveLeftBack, driveLeftFront});
 MotorGroup driveRight = MotorGroup({driveLeftBack, driveLeftFront});
 
-
 Motor intake = Motor(4, false, AbstractMotor::gearset::green);
 Motor shooter = Motor(5, false, AbstractMotor::gearset::green);
 Motor shooterAngle = Motor(6, false, AbstractMotor::gearset::green);
 
 /* Higher-level stuff like ChassisControllers, Controllers, etc. */
+auto _shooterAngleController = AsyncControllerFactory::posIntegrated(shooterAngle, 200);
 
 auto drivetrain = ChassisControllerFactory::create(driveLeft, driveRight, driveGearset, driveScales);
 auto masterController = Controller();
 
-auto shooterAngleController = AsyncControllerFactory::posIntegrated(shooterAngle, 200);
+std::shared_ptr<BaseIntakeController> intakeController =
+    std::make_shared<BaseIntakeController>(SimpleIntakeController(intake, 200.0));
+
+std::shared_ptr<BaseShooterController> shooterController =
+    std::make_shared<BaseShooterController>(SimpleShooterController(shooter));
+
+std::shared_ptr<BaseShooterAngleController> shooterAngleController =
+    std::make_shared<BaseShooterAngleController>(SimpleShooterAngleController(_shooterAngleController, {20.0, 30.0}));

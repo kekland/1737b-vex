@@ -24,33 +24,33 @@ void opcontrol()
 
     if (masterController.getDigital(ControllerDigital::up))
     {
-      controlShooterAngle(ShooterAngle::upFlag);
+      shooterAngleController->control(ShooterAngle::upFlag);
     }
     else if (masterController.getDigital(ControllerDigital::down))
     {
-      controlShooterAngle(ShooterAngle::downFlag);
+      shooterAngleController->control(ShooterAngle::downFlag);
     }
 
     if (masterController.getDigital(ControllerDigital::R2))
     {
-      controlShooter(ShooterState::shoot);
+      shooterController->control(ShooterState::shoot);
     }
     else
     {
-      controlShooter(ShooterState::stop);
+      shooterController->control(ShooterState::stop);
     }
 
     if (masterController.getDigital(ControllerDigital::L1))
     {
-      controlIntake(IntakeDirection::up);
+      intakeController->control(IntakeDirection::up);
     }
     else if (masterController.getDigital(ControllerDigital::L2))
     {
-      controlIntake(IntakeDirection::down);
+      intakeController->control(IntakeDirection::down);
     }
     else
     {
-      controlIntake(IntakeDirection::stop);
+      intakeController->control(IntakeDirection::stop);
     }
 
     pros::delay(20);
