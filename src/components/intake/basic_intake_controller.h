@@ -6,10 +6,10 @@
 class SimpleIntakeController : public BaseIntakeController
 {
 public:
-  SimpleIntakeController(Motor& motor, double maxVel): BaseIntakeController(motor, maxVel) {};
-  void control(IntakeDirection direction)
+  SimpleIntakeController(okapi::Motor& motor, double maxVel): BaseIntakeController(motor, maxVel) {};
+  void control(IntakeDirection direction) override
   {
-    motor->moveVelocity(direction * maxVelocity);
+    motor->moveVelocity(static_cast<int>(direction) * maxVelocity);
   };
 };
 

@@ -1,7 +1,7 @@
 #ifndef INTAKE_H_
 #define INTAKE_H_
-#include "main.h"
-enum IntakeDirection
+
+enum class IntakeDirection
 {
   up = 1,
   stop = 0,
@@ -11,19 +11,14 @@ enum IntakeDirection
 class BaseIntakeController
 {
 public:
-  BaseIntakeController(Motor&, double);
+  BaseIntakeController(const okapi::Motor& intakeMotor, double maxVel);
   void setMaxVelocity(double);
   double getMaxVelocity();
-  virtual void control(IntakeDirection) = 0;
+  virtual void control(IntakeDirection direction) = 0;
 
 protected:
   double maxVelocity = 200.0;
-  std::shared_ptr<Motor> motor;
+  std::shared_ptr<okapi::Motor> motor;
 };
-
-BaseIntakeController::BaseIntakeController(Motor& intakeMotor, double maxVel) {
-  motor = std::make_shared<Motor>(intakeMotor);
-  maxVelocity = maxVel;
-}
 
 #endif

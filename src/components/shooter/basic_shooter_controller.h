@@ -6,10 +6,10 @@
 class SimpleShooterController : public BaseShooterController
 {
 public:
-  SimpleShooterController(Motor& motor): BaseShooterController(motor) {};
-  void control(ShooterState state)
+  SimpleShooterController(okapi::Motor& motor): BaseShooterController(motor) {};
+  void control(ShooterState state) override
   {
-    motor->moveVoltage(12000 * state);
+    motor->moveVoltage(12000 * static_cast<int>(state));
   };
 };
 

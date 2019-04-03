@@ -6,12 +6,12 @@
 class SimpleShooterAngleController : public BaseShooterAngleController
 {
 public:
-  SimpleShooterAngleController(AsyncPositionController<double, double>& controller, std::initializer_list<double> shooterPositions)
+  SimpleShooterAngleController(okapi::AsyncPosIntegratedController & controller, std::initializer_list<double> shooterPositions)
       : BaseShooterAngleController(controller, shooterPositions){};
   
-  void control(ShooterAngle angle)
+  void control(ShooterAngle angle) override
   {
-    double position = positions[(int)angle];
+    double position = positions[static_cast<int>(angle)];
     motorController->setTarget(position);
   };
 };

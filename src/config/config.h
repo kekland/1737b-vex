@@ -7,11 +7,11 @@ using namespace okapi;
 
 /* Higher-level stuff like ChassisControllers, Controllers, etc. */
 
-extern ChassisControllerIntegrated drivetrain;
-extern Controller masterController;
+extern okapi::ChassisControllerIntegrated drivetrain;
+extern okapi::Controller masterController;
 
-extern std::shared_ptr<BaseIntakeController> intakeController;
-extern std::shared_ptr<BaseShooterController> shooterController;
-extern std::shared_ptr<BaseShooterAngleController> shooterAngleController;
+extern BaseIntakeController* intakeController;
+extern BaseShooterController* shooterController;
+extern BaseShooterAngleController* shooterAngleController;
 
 #endif
