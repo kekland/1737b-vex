@@ -14,6 +14,8 @@ class BaseShooterController
 public:
   BaseShooterController(okapi::Motor& shooterMotor);
   virtual void control(ShooterState state) = 0;
+  virtual void shootOnce() = 0;
+  virtual void shootTwice() = 0;
 
 protected:
   std::shared_ptr<okapi::Motor> motor;

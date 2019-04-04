@@ -5,8 +5,8 @@
 
 enum class ShooterAngle
 {
-  upFlag = 1,
-  downFlag = 0
+  upFlag = 0,
+  downFlag = 1
 };
 
 class BaseShooterAngleController

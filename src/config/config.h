@@ -13,5 +13,8 @@ extern okapi::Controller masterController;
 extern BaseIntakeController* intakeController;
 extern BaseShooterController* shooterController;
 extern BaseShooterAngleController* shooterAngleController;
+extern pros::Vision visionSensor;
+
+extern void configure();
 
 #endif
