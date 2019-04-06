@@ -23,7 +23,7 @@ pros::vision_object_s_t *get_top_flag()
   for (int size = 0; size < 3; size++)
   {
     auto flag = visionSensor.get_by_size(size);
-    if (flag.width >= 12 && flag.height >= 12 && (flag.signature == BLUE_FLAG || flag.signature == RED_FLAG))
+    if (flag.width >= 6 && flag.height >= 6 && (flag.signature == BLUE_FLAG || flag.signature == RED_FLAG))
     {
       flags.push_back(flag);
     }
@@ -50,7 +50,9 @@ pros::vision_object_s_t *get_top_flag()
     }
 
     auto flag = flags[i];
-    if (flag.y_middle_coord > highestY || (abs(flag.y_middle_coord - highestY) < 10 && flag.width > flags[highestIndex].width && flag.height > flags[highestIndex].height))
+    double flagArea = flag.width * flag.height;
+    double highestIndexArea = flags[highestIndex].width * flags[highestIndex].height;
+    if (flag.y_middle_coord > highestY || (abs(flag.y_middle_coord - highestY) < 20 && flagArea >= highestIndexArea))
     {
       highestY = flag.y_middle_coord;
       highestIndex = i;
@@ -73,7 +75,9 @@ pros::vision_object_s_t *get_top_flag()
       continue;
     }
 
-    if (flag.y_middle_coord > highestY || (abs(flag.y_middle_coord - highestY) < 20 && flag.width * flag.height > flags[secondHighestIndex].width * flags[secondHighestIndex].height))
+    double flagArea = flag.width * flag.height;
+    double highestIndexArea = flags[secondHighestIndex].width * flags[secondHighestIndex].height;
+    if (flag.y_middle_coord > highestY || (abs(flag.y_middle_coord - highestY) < 20 && flagArea >= highestIndexArea))
     {
       highestY = flag.y_middle_coord;
       secondHighestIndex = i;
@@ -90,7 +94,7 @@ pros::vision_object_s_t *get_middle_flag()
   for (int size = 0; size < 3; size++)
   {
     auto flag = visionSensor.get_by_size(size);
-    if (flag.width >= 12 && flag.height >= 12 && (flag.signature == BLUE_FLAG || flag.signature == RED_FLAG))
+    if (flag.width >= 6 && flag.height >= 6 && (flag.signature == BLUE_FLAG || flag.signature == RED_FLAG))
     {
       flags.push_back(flag);
     }
@@ -117,7 +121,9 @@ pros::vision_object_s_t *get_middle_flag()
     }
 
     auto flag = flags[i];
-    if (flag.y_middle_coord > highestY || (abs(flag.y_middle_coord - highestY) < 10 && flag.width > flags[highestIndex].width && flag.height > flags[highestIndex].height))
+    double flagArea = flag.width * flag.height;
+    double highestIndexArea = flags[highestIndex].width * flags[highestIndex].height;
+    if (flag.y_middle_coord > highestY || (abs(flag.y_middle_coord - highestY) < 20 && flagArea >= highestIndexArea))
     {
       highestY = flag.y_middle_coord;
       highestIndex = i;
@@ -140,7 +146,9 @@ pros::vision_object_s_t *get_middle_flag()
       continue;
     }
 
-    if (flag.y_middle_coord > highestY || (abs(flag.y_middle_coord - highestY) < 20 && flag.width * flag.height > flags[secondHighestIndex].width * flags[secondHighestIndex].height))
+    double flagArea = flag.width * flag.height;
+    double highestIndexArea = flags[secondHighestIndex].width * flags[secondHighestIndex].height;
+    if (flag.y_middle_coord > highestY || (abs(flag.y_middle_coord - highestY) < 20 && flagArea >= highestIndexArea))
     {
       highestY = flag.y_middle_coord;
       secondHighestIndex = i;
@@ -175,21 +183,6 @@ void opcontrol()
     }
     else if (masterController.getDigital(ControllerDigital::R1))
     {
-      shooterController->shootTwice();
-    }
-    else
-    {
-      shooterController->control(ShooterState::stop);
-    }
-
-    if (masterController.getDigital(ControllerDigital::right))
-    {
-      while(masterController.getDigital(ControllerDigital::right)) {pros::delay(20);}
-      current_flag = (current_flag == RED_FLAG)? BLUE_FLAG : RED_FLAG;
-    }
-
-    if (masterController.getDigital(ControllerDigital::left))
-    {
       printf("shootin\n");
 
       auto highFlag = get_top_flag();
@@ -216,6 +209,8 @@ void opcontrol()
         printf("flags\n%d\n%d\n", highFlag->signature, middleFlag->signature);
 
         int initialSign = 778;
+        int timeWhenDxOk = -1;
+        double prevDx = 778;
         while (true)
         {
           auto flag = (driveHigh) ? get_top_flag() : get_middle_flag();
@@ -227,32 +222,108 @@ void opcontrol()
           {
             continue;
           }
+          if (flag->signature != current_flag)
+          {
+            continue;
+          }
           double dx = (double)flag->x_middle_coord;
-          if (abs(dx) < 4)
+          if(prevDx == 778) {
+            prevDx = dx;
+          }
+          if(abs(dx - prevDx) > 50) {
+            continue;
+          }
+          prevDx = dx;
+          bool ok = abs(dx) < 5;
+          if (ok && timeWhenDxOk == -1)
+          {
+            timeWhenDxOk = pros::millis();
+          }
+          else if (ok && pros::millis() - timeWhenDxOk > 50)
           {
             drivetrain.tank(0.0, 0.0);
-            pros::delay(50);
             break;
           }
-          printf("%d\n", dx);
+          else if (!ok)
+          {
+            timeWhenDxOk = -1;
+          }
           int sign = (dx > 0) ? 1 : -1;
           if (initialSign == 778)
           {
             initialSign = sign;
           }
-          int absdx = abs(dx);
-          double vel = 0.2;
-          if (absdx <= 10)
-          {
-            vel = 0.075;
+          printf("%f, (%d %d)\n", dx, flag->width, flag->height);
+
+          double vel = 0.275;
+          if(abs(dx) <= 45) {
+            vel = 0.114;
           }
-          else if (absdx <= 5)
-          {
-            vel = 0.05;
+          else if(abs(dx) <= 23) {
+            vel = 0.064;
           }
-          drivetrain.tank(vel * sign, -vel * sign);
+          else if(abs(dx) <= 3) {
+            vel = 0.0;
+          }
+          drivetrain.tank(sign * vel, -sign * vel);
           pros::delay(25);
         }
+
+        initialSign = 778;
+
+        while (true) 
+        {
+          auto flag = (driveHigh) ? get_top_flag() : get_middle_flag();
+          if (flag == NULL)
+          {
+            continue;
+          }
+          if (flag->signature != RED_FLAG && flag->signature != BLUE_FLAG)
+          {
+            continue;
+          }
+
+          double dx = 24.0 - ((double)flag->width);
+          printf("%f, (%d %d)\n", dx, flag->width, flag->height);
+
+          if (abs(dx) <= 1.0)
+          {
+            drivetrain.tank(-initialSign * 0.085, -initialSign * 0.085);
+            pros::delay(25);
+            drivetrain.tank(-initialSign * 0.0, -initialSign * 0.0);
+            pros::delay(30);
+            break;
+          }
+
+          int sign = (dx > 0)? 1 : -1;
+          if (initialSign == 778)
+          {
+            initialSign = sign;
+          }
+          drivetrain.tank(sign * 0.2, sign * 0.2);
+          pros::delay(25);
+        }
+
+        highFlag = get_top_flag();
+        middleFlag = get_middle_flag();
+        driveHigh = false;
+        driveMiddle = false;
+        if (highFlag != NULL)
+        {
+          if (highFlag->signature == current_flag)
+          {
+            driveHigh = true;
+          }
+        }
+        if (middleFlag != NULL)
+        {
+          if (middleFlag->signature == current_flag)
+          {
+            driveMiddle = true;
+          }
+        }
+
+        printf("%d %d\n", driveHigh, driveMiddle);
 
         if (driveHigh && driveMiddle)
         {
@@ -273,6 +344,19 @@ void opcontrol()
         pros::delay(100);
       }
     }
+    else
+    {
+      shooterController->control(ShooterState::stop);
+    }
+
+    if (masterController.getDigital(ControllerDigital::right))
+    {
+      while (masterController.getDigital(ControllerDigital::right))
+      {
+        pros::delay(20);
+      }
+      current_flag = (current_flag == RED_FLAG) ? BLUE_FLAG : RED_FLAG;
+    }
 
     if (masterController.getDigital(ControllerDigital::L1))
     {
@@ -286,6 +370,11 @@ void opcontrol()
     {
       intakeController->control(IntakeDirection::stop);
     }
+
+    if(masterController.getDigital(ControllerDigital::left)) {
+      autonomous();
+    }
+    printf("%f\n", gyro.get());
 
     pros::delay(25);
   }

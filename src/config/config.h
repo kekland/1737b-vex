@@ -13,10 +13,18 @@ extern okapi::Controller masterController;
 extern Motor shooter;
 extern Motor shooterAngle;
 
+extern MotorGroup driveLeft;
+extern MotorGroup driveRight;
+
 extern BaseIntakeController* intakeController;
 extern BaseShooterController* shooterController;
 extern BaseShooterAngleController* shooterAngleController;
 extern pros::Vision visionSensor;
+extern okapi::ADIGyro gyro;
+
+extern IterativePosPIDController leftDriveController;
+extern IterativePosPIDController rightDriveController;
+extern IterativePosPIDController turnController;
 
 extern void configure();
 
