@@ -9,7 +9,7 @@ public:
   SimpleShooterController(okapi::Motor& motor): BaseShooterController(motor) {};
   void control(ShooterState state) override
   {
-    motor->moveVoltage(12000 * static_cast<int>(state));
+    motor->moveVoltage(12000 * (int)state);
   };
 
   void shootOnce() override {
@@ -21,15 +21,19 @@ public:
     }
     control(ShooterState::stop);
     pros::delay(10);*/
-    pros::delay(800);
+    pros::delay(600);
     control(ShooterState::stop);
     motor->tarePosition();
   }
 
   void shootTwice() override {
+    shooterAngleController->control(ShooterAngle::upFlag);
     shootOnce();
+    intakeController->control(IntakeDirection::up);
+    pros::delay(200);
+    shooterAngleController->control(ShooterAngle::downFlag);
+    pros::delay(150);
     shootOnce();
-
   };
 };
 

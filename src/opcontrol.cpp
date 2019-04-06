@@ -23,7 +23,6 @@ pros::vision_object_s_t *get_top_flag()
   for (int size = 0; size < 3; size++)
   {
     auto flag = visionSensor.get_by_size(size);
-    printf("%d\n", flag.signature);
     if (flag.width >= 12 && flag.height >= 12 && (flag.signature == BLUE_FLAG || flag.signature == RED_FLAG))
     {
       flags.push_back(flag);
@@ -31,7 +30,6 @@ pros::vision_object_s_t *get_top_flag()
   }
 
   int total = flags.size();
-  printf("%d %d\n", total, visionSensor.get_object_count());
 
   if (total < 2)
   {
@@ -58,8 +56,6 @@ pros::vision_object_s_t *get_top_flag()
       highestIndex = i;
     }
   }
-
-  printf("%d", highestIndex);
 
   highestY = -1000;
 
@@ -94,7 +90,6 @@ pros::vision_object_s_t *get_middle_flag()
   for (int size = 0; size < 3; size++)
   {
     auto flag = visionSensor.get_by_size(size);
-    printf("%d\n", flag.signature);
     if (flag.width >= 12 && flag.height >= 12 && (flag.signature == BLUE_FLAG || flag.signature == RED_FLAG))
     {
       flags.push_back(flag);
@@ -102,7 +97,6 @@ pros::vision_object_s_t *get_middle_flag()
   }
 
   int total = flags.size();
-  printf("%d %d\n", total, visionSensor.get_object_count());
 
   if (total < 2)
   {
@@ -130,8 +124,6 @@ pros::vision_object_s_t *get_middle_flag()
     }
   }
 
-  printf("%d", highestIndex);
-
   highestY = -1000;
 
   for (int i = 0; i < total; i++)
@@ -158,8 +150,10 @@ pros::vision_object_s_t *get_middle_flag()
   return &flags[secondHighestIndex];
 }
 
+int current_flag = RED_FLAG;
 void opcontrol()
 {
+  shooterAngle.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   drivetrain.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   while (true)
   {
@@ -179,74 +173,105 @@ void opcontrol()
     {
       shooterController->control(ShooterState::shoot);
     }
-    else if (masterController.getDigital(ControllerDigital::right))
+    else if (masterController.getDigital(ControllerDigital::R1))
     {
-      printf("shootin");
+      shooterController->shootTwice();
+    }
+    else
+    {
+      shooterController->control(ShooterState::stop);
+    }
+
+    if (masterController.getDigital(ControllerDigital::right))
+    {
+      while(masterController.getDigital(ControllerDigital::right)) {pros::delay(20);}
+      current_flag = (current_flag == RED_FLAG)? BLUE_FLAG : RED_FLAG;
+    }
+
+    if (masterController.getDigital(ControllerDigital::left))
+    {
+      printf("shootin\n");
 
       auto highFlag = get_top_flag();
       auto middleFlag = get_middle_flag();
       bool driveHigh = false;
       bool driveMiddle = false;
-      if (highFlag != NULL && highFlag->signature == BLUE_FLAG)
+      if (highFlag != NULL)
       {
-        driveHigh = true;
+        if (highFlag->signature == current_flag)
+        {
+          driveHigh = true;
+        }
       }
-      if (middleFlag != NULL && middleFlag->signature == BLUE_FLAG)
+      if (middleFlag != NULL)
       {
-        driveMiddle = true;
+        if (middleFlag->signature == current_flag)
+        {
+          driveMiddle = true;
+        }
       }
 
-      if (driveMiddle || driveHigh)
+      if (driveHigh || driveMiddle)
       {
+        printf("flags\n%d\n%d\n", highFlag->signature, middleFlag->signature);
+
+        int initialSign = 778;
         while (true)
         {
-          auto flag = (driveHigh)? get_top_flag() : get_middle_flag();
-          int dx = flag->x_middle_coord + flag->width / 3.0;
-          if (abs(dx) < 5)
+          auto flag = (driveHigh) ? get_top_flag() : get_middle_flag();
+          if (flag == NULL)
           {
-            drivetrain.tank(0, 0);
-            pros::delay(30);
+            continue;
+          }
+          if (flag->signature != RED_FLAG && flag->signature != BLUE_FLAG)
+          {
+            continue;
+          }
+          double dx = (double)flag->x_middle_coord;
+          if (abs(dx) < 4)
+          {
+            drivetrain.tank(0.0, 0.0);
+            pros::delay(50);
             break;
           }
           printf("%d\n", dx);
           int sign = (dx > 0) ? 1 : -1;
-          drivetrain.tank(0.2 * sign, -0.2 * sign);
+          if (initialSign == 778)
+          {
+            initialSign = sign;
+          }
+          int absdx = abs(dx);
+          double vel = 0.2;
+          if (absdx <= 10)
+          {
+            vel = 0.075;
+          }
+          else if (absdx <= 5)
+          {
+            vel = 0.05;
+          }
+          drivetrain.tank(vel * sign, -vel * sign);
           pros::delay(25);
         }
-      }
 
-      if(highFlag != NULL && highFlag->signature == BLUE_FLAG && middleFlag != NULL && middleFlag->signature == BLUE_FLAG) {
-        shooterAngleController->control(ShooterAngle::upFlag);
-        pros::delay(200);
-        shooterController->control(ShooterState::shoot);
-        pros::delay(500);
-        shooterController->control(ShooterState::stop);
-        pros::delay(150);
-        shooterAngleController->control(ShooterAngle::downFlag);
-        pros::delay(150);
-        shooterController->control(ShooterState::shoot);
-        pros::delay(500);
-        shooterController->control(ShooterState::stop);
+        if (driveHigh && driveMiddle)
+        {
+          shooterController->shootTwice();
+        }
+        else if (driveHigh)
+        {
+          shooterAngleController->control(ShooterAngle::upFlag);
+          pros::delay(200);
+          shooterController->shootOnce();
+        }
+        else if (driveMiddle)
+        {
+          shooterAngleController->control(ShooterAngle::downFlag);
+          pros::delay(200);
+          shooterController->shootOnce();
+        }
+        pros::delay(100);
       }
-      else if(highFlag != NULL && highFlag->signature == BLUE_FLAG) {
-        shooterAngleController->control(ShooterAngle::upFlag);
-        pros::delay(200);
-        shooterController->control(ShooterState::shoot);
-        pros::delay(500);
-        shooterController->control(ShooterState::stop);
-      }
-      else if(middleFlag != NULL && middleFlag->signature == BLUE_FLAG) {
-        shooterAngleController->control(ShooterAngle::downFlag);
-        pros::delay(200);
-        shooterController->control(ShooterState::shoot);
-        pros::delay(500);
-        shooterController->control(ShooterState::stop);
-      }
-      pros::delay(100);
-    }
-    else
-    {
-      shooterController->control(ShooterState::stop);
     }
 
     if (masterController.getDigital(ControllerDigital::L1))

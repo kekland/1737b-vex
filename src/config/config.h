@@ -10,6 +10,9 @@ using namespace okapi;
 extern okapi::ChassisControllerIntegrated drivetrain;
 extern okapi::Controller masterController;
 
+extern Motor shooter;
+extern Motor shooterAngle;
+
 extern BaseIntakeController* intakeController;
 extern BaseShooterController* shooterController;
 extern BaseShooterAngleController* shooterAngleController;
