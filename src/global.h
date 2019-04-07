@@ -1,8 +1,9 @@
+#pragma once
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-#include "game_state/game_globals.h"
-#include "game_state/game_state.h"
+#include "game/game_globals.h"
+#include "game/game_state.h"
 
 #include "./components/intake/intake.h"
 #include "./components/shooterAngle/shooterAngle.h"

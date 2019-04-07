@@ -1,3 +1,4 @@
+#pragma once
 #ifndef GAME_GLOBALS_H_
 #define GAME_GLOBALS_H_
 

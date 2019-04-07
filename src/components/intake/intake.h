@@ -1,3 +1,4 @@
+#pragma once
 #ifndef INTAKE_H_
 #define INTAKE_H_
 

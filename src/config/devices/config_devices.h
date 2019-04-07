@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CONFIG_DEVICES_H_
 #define CONFIG_DEVICES_H_
 

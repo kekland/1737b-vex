@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SHOOTERANGLE_H_
 #define SHOOTERANGLE_H_
 

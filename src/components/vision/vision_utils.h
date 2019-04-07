@@ -1,3 +1,4 @@
+#pragma once
 #ifndef VISION_UTILS_H_
 #define VISION_UTILS_H_
 

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SHOOTER_H_
 #define SHOOTER_H_
 

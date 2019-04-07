@@ -1,6 +1,6 @@
 #include "main.h"
-#include "autonomous_variants.h"
-#include "../autonomous/autonomous_controller.h"
+#include "../autonomous_variants.h"
+#include "../autonomous_controller.h"
 
 using namespace okapi;
 

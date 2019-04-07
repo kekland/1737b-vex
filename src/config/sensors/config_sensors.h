@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CONFIG_SENSORS_H_
 #define CONFIG_SENSORS_H_
 

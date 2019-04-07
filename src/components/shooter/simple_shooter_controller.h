@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SIMPLE_SHOOTER_CONTROLLER_H_
 #define SIMPLE_SHOOTER_CONTROLLER_H_
 

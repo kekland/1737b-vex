@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SIMPLE_INTAKE_CONTROLLER_H_
 #define SIMPLE_INTAKE_CONTROLLER_H_
 

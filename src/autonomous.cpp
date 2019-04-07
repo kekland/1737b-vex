@@ -1,6 +1,6 @@
 #include "main.h"
 #include "./autonomous/autonomous_controller.h"
-#include "./autonomous_variants/autonomous_variants.h"
+#include "./autonomous/autonomous_variants.h"
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
