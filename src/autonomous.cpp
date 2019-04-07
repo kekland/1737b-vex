@@ -1,6 +1,6 @@
 #include "main.h"
 #include "./autonomous/autonomous_controller.h"
-
+#include "./autonomous_variants/autonomous_variants.h"
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -13,20 +13,18 @@
  * from where it left off.
  */
 
+using void_f = void (*)();
 
-void autonomous() {
+void_f autonomousVariants[] = {&autonomousFront1};
+
+void autonomous()
+{
+  int selectedAutonomous = gameState.getAutonomous();
+
+  if(selectedAutonomous == -1) {
+    return;
+  }
+
   gameState.autonStarted();
-
-  intakeController->control(IntakeDirection::up);
-  drive(130.0);
-  pros::delay(200);
-  intakeController->control(IntakeDirection::stop);
-  drive(-115.0);
-  turn(-90.0);
-  shootTwiceAutomated(gameState.getOpposingFlag());
-  turn(45.0);
-  intakeController->control(IntakeDirection::down);
-  drive(115.0);
-  turn(-45.0);
-  drive(-160.0);
+  (*autonomousVariants[selectedAutonomous])();
 }

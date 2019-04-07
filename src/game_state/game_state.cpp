@@ -59,4 +59,8 @@ void GameState::setAutonomous(int selection) {
   selectedAutonomous = selection;
 }
 
+int GameState::getAutonomous() {
+  return selectedAutonomous;
+}
+
 GameState gameState = GameState();

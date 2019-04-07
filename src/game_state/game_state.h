@@ -17,6 +17,8 @@ class GameState {
     Alliance getAlliance();
     Flag getOpposingFlag();
 
+    int getAutonomous();
+
   protected:
     Alliance selectedAlliance = Alliance::none;
     int selectedAutonomous = -1;
