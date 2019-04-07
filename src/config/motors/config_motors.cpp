@@ -1,5 +1,6 @@
 #include "main.h"
 
+using namespace okapi;
 /* Basic data such as gearsets, drive scales, etc */
 
 okapi::AbstractMotor::gearset driveGearset = okapi::AbstractMotor::gearset::green;

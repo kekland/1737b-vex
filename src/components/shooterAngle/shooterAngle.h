@@ -15,6 +15,7 @@ public:
   BaseShooterAngleController(okapi::AsyncPosIntegratedController& controller, std::initializer_list<double> anglePositions);
   virtual void control(ShooterAngle angle) = 0;
   void waitUntilSettled();
+  ShooterAngle currentAngle;
 
 protected:
   okapi::AsyncPosIntegratedController* motorController;

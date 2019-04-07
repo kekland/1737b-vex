@@ -1,6 +1,6 @@
 #include "main.h"
 
-okapi::Controller masterController = Controller();
+okapi::Controller masterController = okapi::Controller();
 
 void configure_devices() {
   info("Starting configuration", "config_devices");

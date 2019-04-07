@@ -2,7 +2,7 @@
 #include <sstream>
 using namespace std;
 
-void _start(LogLevel level, string context = "") {
+void _start(LogLevel level, string context) {
   string color = "37";
   string bold = "0";
   if(level == LogLevel::warn) {
@@ -22,18 +22,18 @@ void _end() {
   printf("\033[0m\n");
 }
 
-void info(string message, string context = "") {
+void info(string message, string context) {
   _start(LogLevel::info, context);
   printf(message.c_str());
   _end();
 }
 
-void warn(string message, string context = "") {
+void warn(string message, string context) {
   _start(LogLevel::warn, context);
   printf(message.c_str());
   _end();
 }
-void error(string message, string context = "") {
+void error(string message, string context) {
   _start(LogLevel::error, context);
   printf(message.c_str());
   _end();
