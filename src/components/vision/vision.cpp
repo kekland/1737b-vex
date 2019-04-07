@@ -1,4 +1,5 @@
 #include "main.h"
+#include "vision_utils.h"
 
 pros::vision_object_s_t *get_top_flag()
 {
