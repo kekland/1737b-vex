@@ -40,7 +40,7 @@ void driveForward(double cm) {
   leftDriveController.setTarget(degrees);
   rightDriveController.reset();
   rightDriveController.setTarget(degrees);
-  while(!leftDriveController.isSettled() || !rightDriveController.isSettled()) {
+  while(!leftDriveController.isSettled() && !rightDriveController.isSettled()) {
     double leftReading = driveLeft.getPosition();
     double rightReading = driveRight.getPosition();
 
@@ -52,6 +52,7 @@ void driveForward(double cm) {
 
     pros::delay(10);
   }
+  pros::delay(150);
 }
 
 void turn(double degrees) {
@@ -67,8 +68,20 @@ void turn(double degrees) {
     driveRight.controllerSet(-reading);
     pros::delay(10); // Run the control loop at 10ms intervals
   }
+  pros::delay(150);
 }
 
 void autonomous() {
-  turn(90.0);
+  intakeController->control(IntakeDirection::up);
+  driveForward(130.0);
+  pros::delay(200);
+  intakeController->control(IntakeDirection::stop);
+  driveForward(-115.0);
+  turn(-90.0);
+  shootTwiceAutomated(BLUE_FLAG);
+  turn(45.0);
+  intakeController->control(IntakeDirection::down);
+  driveForward(115.0);
+  turn(-45.0);
+  driveForward(-160.0);
 }

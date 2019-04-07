@@ -32,7 +32,7 @@ okapi::Controller masterController = Controller();
 
 auto _intakeController = SimpleIntakeController(intake, 200.0);
 auto _shooterController = SimpleShooterController(shooter);
-auto _shooterAngleController = SimpleShooterAngleController(_saController, {20.0, 57.0});
+auto _shooterAngleController = SimpleShooterAngleController(_saController, {25.0, 60.0});
 
 BaseIntakeController *intakeController = &_intakeController;
 
@@ -43,9 +43,9 @@ BaseShooterAngleController *shooterAngleController = &_shooterAngleController;
 pros::Vision visionSensor(18, pros::E_VISION_ZERO_CENTER);
 okapi::ADIGyro gyro(1, 0.9715);
 
-okapi::IterativePosPIDController leftDriveController = IterativeControllerFactory::posPID(0.01, 0.0, 0.0, 0.0);
-okapi::IterativePosPIDController rightDriveController = IterativeControllerFactory::posPID(0.01, 0.0, 0.0, 0.0);
-okapi::IterativePosPIDController turnController = IterativeControllerFactory::posPID(0.01, 0.0, 0.0, 0.0);
+okapi::IterativePosPIDController leftDriveController = IterativeControllerFactory::posPID(0.0048, 0.0, 0.00013, 0.0);
+okapi::IterativePosPIDController rightDriveController = IterativeControllerFactory::posPID(0.0048, 0.0, 0.00013, 0.0);
+okapi::IterativePosPIDController turnController = IterativeControllerFactory::posPID(0.0124, 0.0, 0.00018, 0.0);
 void configure() {
     shooterAngle.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     visionSensor.clear_led();
