@@ -15,8 +15,54 @@ using namespace okapi;
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+void controlShooterAngle()
+{
+  if (masterController.getDigital(ControllerDigital::up))
+  {
+    shooterAngleController->control(ShooterAngle::upFlag);
+  }
+  else if (masterController.getDigital(ControllerDigital::down))
+  {
+    shooterAngleController->control(ShooterAngle::downFlag);
+  }
+}
+
+void controlShooter()
+{
+  if (masterController.getDigital(ControllerDigital::R2))
+  {
+    shooterController->control(ShooterState::shoot);
+  }
+  else if (masterController.getDigital(ControllerDigital::R1))
+  {
+    shootTwiceAutomated(gameState.getOpposingFlag());
+  }
+  else
+  {
+    shooterController->control(ShooterState::stop);
+  }
+}
+
+void controlIntake()
+{
+  if (masterController.getDigital(ControllerDigital::L1))
+  {
+    intakeController->control(IntakeDirection::up);
+  }
+  else if (masterController.getDigital(ControllerDigital::L2))
+  {
+    intakeController->control(IntakeDirection::down);
+  }
+  else
+  {
+    intakeController->control(IntakeDirection::stop);
+  }
+}
+
 void opcontrol()
 {
+  bool rumbled = false;
   gameState.driverStarted();
   while (true)
   {
@@ -24,43 +70,9 @@ void opcontrol()
     drivetrain.tank(masterController.getAnalog(ControllerAnalog::leftY),
                     masterController.getAnalog(ControllerAnalog::rightY));
 
-    // Shooter angle
-    if (masterController.getDigital(ControllerDigital::up))
-    {
-      shooterAngleController->control(ShooterAngle::upFlag);
-    }
-    else if (masterController.getDigital(ControllerDigital::down))
-    {
-      shooterAngleController->control(ShooterAngle::downFlag);
-    }
-
-    // Shooting
-    if (masterController.getDigital(ControllerDigital::R2))
-    {
-      shooterController->control(ShooterState::shoot);
-    }
-    else if (masterController.getDigital(ControllerDigital::R1))
-    {
-      shootTwiceAutomated(gameState.getOpposingFlag());
-    }
-    else
-    {
-      shooterController->control(ShooterState::stop);
-    }
-
-    // Intake
-    if (masterController.getDigital(ControllerDigital::L1))
-    {
-      intakeController->control(IntakeDirection::up);
-    }
-    else if (masterController.getDigital(ControllerDigital::L2))
-    {
-      intakeController->control(IntakeDirection::down);
-    }
-    else
-    {
-      intakeController->control(IntakeDirection::stop);
-    }
+    controlShooterAngle();
+    controlShooter();
+    controlIntake();
 
     // Temporary
     if (masterController.getDigital(ControllerDigital::right))
@@ -69,7 +81,7 @@ void opcontrol()
       {
         pros::delay(20);
       }
-      
+
       Alliance alliance = gameState.getAlliance();
       gameState.setAlliance(alliance == Alliance::red ? Alliance::blue : Alliance::red);
     }
@@ -78,7 +90,13 @@ void opcontrol()
     {
       autonomous();
     }
-    
+
+    if (gameState.getTimeFromGameStartSeconds() > 75.0 && !rumbled)
+    {
+      masterController.rumble(".-. .-.");
+      rumbled = true;
+    }
+
     pros::delay(25);
   }
 }
