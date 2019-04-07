@@ -9,7 +9,7 @@ const double drivingKp = 0.048;
 const double drivingKi = 0.0;
 const double drivingKd = 0.00013;
 
-/* Do not change ganis for those controllers - their gains are copied from above */
+/* Do not change gains for those controllers - their gains are copied from above */
 okapi::IterativePosPIDController leftDriveController = IterativeControllerFactory::posPID(0.0, 0.0, 0.0, 0.0);
 okapi::IterativePosPIDController rightDriveController = IterativeControllerFactory::posPID(0.0, 0.0, 0.0, 0.0);
 
