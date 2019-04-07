@@ -9,8 +9,8 @@ enum class LogLevel {
   error = 3,
 };
 
-void info(string message, string context = "");
-void warn(string message, string context = "");
-void error(string message, string context = "");
+void info(std::string message, std::string context = "");
+void warn(std::string message, std::string context = "");
+void error(std::string message, std::string context = "");
 
 #endif
