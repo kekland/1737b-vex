@@ -25,8 +25,16 @@ okapi::IterativePosPIDController flagZoomingController = IterativeControllerFact
 void configure_pid() {
   info("Starting configuration", "config_pid");
 
+  // Set gains
   leftDriveController.setGains(drivingKp, drivingKi, drivingKd);
   rightDriveController.setGains(drivingKp, drivingKi, drivingKd);
+
+  // Set output limits for controllers
+  leftDriveController.setOutputLimits(0.5, -0.5);
+  rightDriveController.setOutputLimits(0.5, -0.5);
+  turnController.setOutputLimits(0.5, -0.5);
+  flagAimingController.setOutputLimits(0.5, -0.5);
+  flagZoomingController.setOutputLimits(0.5, -0.5);
 
   info("Finished configuration", "config_pid");
 }
