@@ -19,7 +19,7 @@ void _log(LogLevel level, string message, string context = "")
   printf("%dms\033[%s;%sm [%s] %s\033[0m\n", currentTime, bold, color, context, message);
 }
 
-void log(string message, string context = "") {
+void info(string message, string context = "") {
   _log(LogLevel::info, message, context);
 }
 void warn(string message, string context = "") {

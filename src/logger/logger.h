@@ -9,7 +9,7 @@ enum class LogLevel {
   error = 3,
 };
 
-void log(string message, string context = "");
+void info(string message, string context = "");
 void warn(string message, string context = "");
 void error(string message, string context = "");
 
