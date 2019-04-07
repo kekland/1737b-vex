@@ -11,6 +11,12 @@ enum class Flag {
   none = -1,
 };
 
+enum class FlagLocation {
+  top = 1,
+  middle = 2,
+  bottom = 3,
+};
+
 enum class Alliance {
   red = 1,
   blue = 2,

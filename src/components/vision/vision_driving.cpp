@@ -16,11 +16,6 @@ void aimForFlag(Flag currentFlag) {
       warn("Flag was NULL.", "aimForFlag");
       continue;
     }
-    if (flag->signature != (int)currentFlag)
-    {
-      warn("Flag's signature is incorrect.", "aimForFlag");
-      continue;
-    }
 
     double position = (double)flag->x_middle_coord;
     double filteredPosition = filter.filter(position);
@@ -52,11 +47,6 @@ void zoomForFlag(Flag currentFlag) {
     if (flag == NULL)
     {
       warn("Flag was NULL.", "zoomForFlag");
-      continue;
-    }
-    if (flag->signature != (int)currentFlag)
-    {
-      warn("Flag's signature is incorrect.", "zoomForFlag");
       continue;
     }
 

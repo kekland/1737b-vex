@@ -62,6 +62,21 @@ void controlIntake()
 
 void opcontrol()
 {
+  if (TUNING_PID)
+  {
+    warn("Detected that we are tuning PID now. Don't forget to turn this off.", "opcontrol");
+    info("Waiting for R2 button press", "opcontrol");
+    while (true)
+    {
+      if (masterController.getDigital(ControllerDigital::R2))
+      {
+        tune();
+        return;
+      }
+    }
+    return;
+  }
+
   bool rumbled = false;
   gameState.driverStarted();
   while (true)
