@@ -17,5 +17,7 @@ auto _shooterController = SimpleShooterController(shooter);
 BaseShooterController *shooterController = &_shooterController;
 
 void configure_controllers() {
+  info("Starting configuration", "config_controllers");
   drivetrain.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+  info("Finished configuration", "config_controllers");
 }

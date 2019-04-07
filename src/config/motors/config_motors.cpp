@@ -20,6 +20,10 @@ okapi::Motor shooter = okapi::Motor(13, true, AbstractMotor::gearset::green);
 okapi::Motor shooterAngle = okapi::Motor(19, false, AbstractMotor::gearset::green);
 
 void configure_motors() {
+  info("Starting configuration", "config_motors");
+
   driveLeft.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   driveRight.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+  
+  info("Finished configuration", "config_motors");
 }

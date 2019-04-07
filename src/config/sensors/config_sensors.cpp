@@ -8,10 +8,16 @@ void configure_sensors() {
 }
 
 void configure_vision() {
+  info("Starting configuration", "config_sensors");
+
   visionSensor.clear_led();
   pros::vision_signature_s_t RED_SIG = visionSensor.signature_from_utility(1, 7077, 8495, 7786, -631, 263, -184, 5.900, 0);
   pros::vision_signature_s_t BLUE_SIG = visionSensor.signature_from_utility(2, -4133, -2875, -3504, 9551, 16115, 12833, 3.0, 0);
   visionSensor.set_exposure(58);
   visionSensor.set_signature(1, &RED_SIG);
   visionSensor.set_signature(2, &BLUE_SIG);
+
+  pros::delay(100);
+
+  info("Finished configuration", "config_sensors");
 }

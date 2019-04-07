@@ -7,9 +7,13 @@
 
 void configure()
 {
+  info("Starting configuration", "config");
+  
   configure_motors();
   configure_sensors();
   configure_devices();
   configure_controllers();
   configure_pid();
+
+  info("Finished configuration", "config");
 }

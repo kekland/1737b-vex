@@ -22,6 +22,10 @@ okapi::IterativePosPIDController flagAimingController = IterativeControllerFacto
 okapi::IterativePosPIDController flagZoomingController = IterativeControllerFactory::posPID(0.01, 0.0, 0.0);
 
 void configure_pid() {
+  info("Starting configuration", "config_pid");
+
   leftDriveController.setGains(drivingKp, drivingKi, drivingKd);
   rightDriveController.setGains(drivingKp, drivingKi, drivingKd);
+
+  info("Finished configuration", "config_pid");
 }
