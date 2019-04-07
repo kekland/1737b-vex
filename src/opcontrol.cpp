@@ -15,9 +15,9 @@ using namespace okapi;
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-int current_flag = RED_FLAG;
 void opcontrol()
 {
+  gameState.driverStarted();
   while (true)
   {
     // Analog sticks
@@ -41,7 +41,7 @@ void opcontrol()
     }
     else if (masterController.getDigital(ControllerDigital::R1))
     {
-      shootTwiceAutomated(current_flag);
+      shootTwiceAutomated(gameState.getOpposingFlag());
     }
     else
     {
@@ -69,7 +69,9 @@ void opcontrol()
       {
         pros::delay(20);
       }
-      current_flag = (current_flag == RED_FLAG) ? BLUE_FLAG : RED_FLAG;
+      
+      Alliance alliance = gameState.getAlliance();
+      gameState.setAlliance(alliance == Alliance::red ? Alliance::blue : Alliance::red);
     }
 
     if (masterController.getDigital(ControllerDigital::left))

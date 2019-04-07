@@ -8,6 +8,10 @@
  */
 void initialize() {
 	configure();
+	
+	//TODO: Remove those and add LCD implementation
+	gameState.setAlliance(Alliance::red);
+	gameState.setAutonomous(0);
 }
 
 /**

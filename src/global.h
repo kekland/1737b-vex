@@ -1,7 +1,8 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
-#define RED_FLAG 1
-#define BLUE_FLAG 2
+
+#include "game_state/game_globals.h"
+#include "game_state/game_state.h"
 
 #include "./components/intake/intake.h"
 #include "./components/shooterAngle/shooterAngle.h"
@@ -10,5 +11,6 @@
 
 #include "./config/config.h"
 #include "./logger/logger.h"
+
 
 #endif

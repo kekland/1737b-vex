@@ -1,3 +1,8 @@
+#ifndef VISION_H_
+#define VISION_H_
+
 #include "main.h"
 
-void shootTwiceAutomated(int currentFlag);
+void shootTwiceAutomated(Flag currentFlag);
+
+#endif

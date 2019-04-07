@@ -7,7 +7,7 @@ std::vector<pros::vision_object_s_t> getFlags()
   for (int size = 0; size < 3; size++)
   {
     auto flag = visionSensor.get_by_size(size);
-    if (flag.width >= 6 && flag.height >= 6 && (flag.signature == BLUE_FLAG || flag.signature == RED_FLAG))
+    if (flag.width >= 6 && flag.height >= 6 && (flag.signature == (int)Flag::red || flag.signature == (int)Flag::blue))
     {
       flags.push_back(flag);
     }
@@ -81,11 +81,11 @@ pros::vision_object_s_t *getMiddleFlag()
   return &flags[middleFlagIndex];
 }
 
-bool checkFlag(pros::vision_object_s_t *flag, int currentFlag)
+bool checkFlag(pros::vision_object_s_t *flag, Flag currentFlag)
 {
   if (flag != NULL)
   {
-    if (flag->signature == currentFlag)
+    if (flag->signature == (int)currentFlag)
     {
       return true;
     }
@@ -94,7 +94,7 @@ bool checkFlag(pros::vision_object_s_t *flag, int currentFlag)
   return false;
 }
 
-pros::vision_object_s_t *getFlagForShooting(int currentFlag)
+pros::vision_object_s_t *getFlagForShooting(Flag currentFlag)
 {
   auto highFlag = getTopFlag();
   auto middleFlag = getMiddleFlag();

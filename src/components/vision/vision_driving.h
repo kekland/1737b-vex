@@ -2,7 +2,7 @@
 #define VISION_DRIVING_H_
 #include "main.h"
 
-void aimForFlag(int currentFlag);
-void zoomForFlag(int currentFlag);
+void aimForFlag(Flag currentFlag);
+void zoomForFlag(Flag currentFlag);
 
 #endif

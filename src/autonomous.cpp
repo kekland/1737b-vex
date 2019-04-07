@@ -15,13 +15,15 @@
 
 
 void autonomous() {
+  gameState.autonStarted();
+
   intakeController->control(IntakeDirection::up);
   drive(130.0);
   pros::delay(200);
   intakeController->control(IntakeDirection::stop);
   drive(-115.0);
   turn(-90.0);
-  shootTwiceAutomated(BLUE_FLAG);
+  shootTwiceAutomated(gameState.getOpposingFlag());
   turn(45.0);
   intakeController->control(IntakeDirection::down);
   drive(115.0);

@@ -2,8 +2,9 @@
 #include "vision_utils.h"
 
 const int DEFAULT_VALUE = 778;
-void aimForFlag(int currentFlag)
+void aimForFlag(Flag currentFlag)
 {
+  int flagIndex = (int)currentFlag;
   info("Starting to aim for flag", "aimForFlag");
 
   double prevPosition = DEFAULT_VALUE;
@@ -22,7 +23,7 @@ void aimForFlag(int currentFlag)
       warn("Flag was NULL.", "aimForFlag");
       continue;
     }
-    if (flag->signature != currentFlag)
+    if (flag->signature != flagIndex)
     {
       warn("Flag's signature is incorrect.", "aimForFlag");
       continue;
@@ -53,8 +54,9 @@ void aimForFlag(int currentFlag)
 }
 
 const double zoomForFlagTarget = 25.0;
-void zoomForFlag(int currentFlag)
+void zoomForFlag(Flag currentFlag)
 {
+  int flagIndex = (int)currentFlag;
   info("Starting to zoom for flag", "zoomForFlag");
 
   flagZoomingController.reset();
@@ -69,7 +71,7 @@ void zoomForFlag(int currentFlag)
       warn("Flag was NULL.", "zoomForFlag");
       continue;
     }
-    if (flag->signature != RED_FLAG && flag->signature != BLUE_FLAG)
+    if (flag->signature != flagIndex)
     {
       warn("Flag's signature is incorrect.", "zoomForFlag");
       continue;

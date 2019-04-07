@@ -2,17 +2,17 @@
 #include "vision_utils.h"
 #include "vision_driving.h"
 
-bool shouldShootTopFlag(int currentFlag) {
+bool shouldShootTopFlag(Flag currentFlag) {
   auto topFlag = getTopFlag();
   return checkFlag(topFlag, currentFlag);
 }
 
-bool shouldShootMiddleFlag(int currentFlag) {
+bool shouldShootMiddleFlag(Flag currentFlag) {
   auto middleFlag = getTopFlag();
   return checkFlag(middleFlag, currentFlag);
 }
 
-void shootTwiceAutomated(int currentFlag)
+void shootTwiceAutomated(Flag currentFlag)
 {
   info("Starting to shoot.", "shootTwiceAutomated");
 
