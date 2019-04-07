@@ -4,10 +4,13 @@
 #include "main.h"
 
 enum class LogLevel {
-  verbose = 0,
   info = 1,
   warn = 2,
   error = 3,
 };
+
+void log(string message, string context = "");
+void warn(string message, string context = "");
+void error(string message, string context = "");
 
 #endif
