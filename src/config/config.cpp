@@ -5,25 +5,6 @@
 
 using namespace okapi;
 
-/* Basic data such as gearsets, drive scales, etc */
-
-AbstractMotor::gearset driveGearset = AbstractMotor::gearset::green;
-ChassisScales driveScales = ChassisScales({4.0_in, 40.0_cm});
-
-/* Motors and MotorGroups */
-
-Motor driveLeftFront = Motor(10, false, driveGearset);
-Motor driveLeftBack = Motor(12, false, driveGearset);
-Motor driveRightFront = Motor(17, true, driveGearset);
-Motor driveRightBack = Motor(15, true, driveGearset);
-
-MotorGroup driveLeft = MotorGroup({driveLeftBack, driveLeftFront});
-MotorGroup driveRight = MotorGroup({driveRightBack, driveRightFront});
-
-Motor intake = Motor(11, true, AbstractMotor::gearset::green);
-Motor shooter = Motor(13, true, AbstractMotor::gearset::green);
-Motor shooterAngle = Motor(19, false, AbstractMotor::gearset::green);
-
 /* Higher-level stuff like ChassisControllers, Controllers, etc. */
 okapi::AsyncPosIntegratedController _saController = AsyncControllerFactory::posIntegrated(shooterAngle, 100);
 
