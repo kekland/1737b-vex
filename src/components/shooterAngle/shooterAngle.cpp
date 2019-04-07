@@ -10,3 +10,7 @@ BaseShooterAngleController::BaseShooterAngleController(okapi::AsyncPosIntegrated
     i++;
   }
 };
+
+void BaseShooterAngleController::waitUntilSettled() {
+  motorController->waitUntilSettled();
+}

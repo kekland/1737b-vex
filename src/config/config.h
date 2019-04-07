@@ -2,29 +2,11 @@
 #define CONFIG_H_
 
 #include "main.h"
-
-using namespace okapi;
-
-/* Higher-level stuff like ChassisControllers, Controllers, etc. */
-
-extern okapi::ChassisControllerIntegrated drivetrain;
-extern okapi::Controller masterController;
-
-extern Motor shooter;
-extern Motor shooterAngle;
-
-extern MotorGroup driveLeft;
-extern MotorGroup driveRight;
-
-extern BaseIntakeController* intakeController;
-extern BaseShooterController* shooterController;
-extern BaseShooterAngleController* shooterAngleController;
-extern pros::Vision visionSensor;
-extern okapi::ADIGyro gyro;
-
-extern IterativePosPIDController leftDriveController;
-extern IterativePosPIDController rightDriveController;
-extern IterativePosPIDController turnController;
+#include "controllers/config_controllers.h"
+#include "devices/config_devices.h"
+#include "motors/config_motors.h"
+#include "pid/config_pid.h"
+#include "sensors/config_sensors.h"
 
 extern void configure();
 

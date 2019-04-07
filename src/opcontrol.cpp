@@ -15,18 +15,16 @@ using namespace okapi;
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-
-
 int current_flag = RED_FLAG;
 void opcontrol()
 {
-  shooterAngle.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
-  drivetrain.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   while (true)
   {
+    // Analog sticks
     drivetrain.tank(masterController.getAnalog(ControllerAnalog::leftY),
                     masterController.getAnalog(ControllerAnalog::rightY));
 
+    // Shooter angle
     if (masterController.getDigital(ControllerDigital::up))
     {
       shooterAngleController->control(ShooterAngle::upFlag);
@@ -36,6 +34,7 @@ void opcontrol()
       shooterAngleController->control(ShooterAngle::downFlag);
     }
 
+    // Shooting
     if (masterController.getDigital(ControllerDigital::R2))
     {
       shooterController->control(ShooterState::shoot);
@@ -49,15 +48,7 @@ void opcontrol()
       shooterController->control(ShooterState::stop);
     }
 
-    if (masterController.getDigital(ControllerDigital::right))
-    {
-      while (masterController.getDigital(ControllerDigital::right))
-      {
-        pros::delay(20);
-      }
-      current_flag = (current_flag == RED_FLAG) ? BLUE_FLAG : RED_FLAG;
-    }
-
+    // Intake
     if (masterController.getDigital(ControllerDigital::L1))
     {
       intakeController->control(IntakeDirection::up);
@@ -71,11 +62,21 @@ void opcontrol()
       intakeController->control(IntakeDirection::stop);
     }
 
-    if(masterController.getDigital(ControllerDigital::left)) {
+    // Temporary
+    if (masterController.getDigital(ControllerDigital::right))
+    {
+      while (masterController.getDigital(ControllerDigital::right))
+      {
+        pros::delay(20);
+      }
+      current_flag = (current_flag == RED_FLAG) ? BLUE_FLAG : RED_FLAG;
+    }
+
+    if (masterController.getDigital(ControllerDigital::left))
+    {
       autonomous();
     }
-    printf("%f\n", gyro.get());
-
+    
     pros::delay(25);
   }
 }

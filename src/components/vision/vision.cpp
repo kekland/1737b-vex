@@ -1,97 +1,68 @@
 #include "main.h"
 #include "vision_utils.h"
+#include "vision_driving.h"
 
+bool shouldShootTopFlag(int currentFlag) {
+  auto topFlag = getTopFlag();
+  return checkFlag(topFlag, currentFlag);
+}
+
+bool shouldShootMiddleFlag(int currentFlag) {
+  auto middleFlag = getTopFlag();
+  return checkFlag(middleFlag, currentFlag);
+}
 
 void shootTwiceAutomated(int currentFlag)
 {
-  printf("shootin\n");
+  info("Starting to shoot.", "shootTwiceAutomated");
 
-  auto highFlag = getTopFlag();
-  auto middleFlag = getMiddleFlag();
+  bool shootTopFlag = shouldShootTopFlag(currentFlag);
+  bool shootMiddleFlag = shouldShootMiddleFlag(currentFlag);
+  bool shootAny = shootTopFlag || shootMiddleFlag;
 
-  bool shouldShootHighFlag = checkFlag(highFlag, currentFlag);
-  bool shouldShootMiddleFlag = checkFlag(middleFlag, currentFlag);
-  bool shouldShootAny = shouldShootHighFlag || shouldShootMiddleFlag;
-
-  if (!shouldShootAny)
+  if (!shootAny)
   {
+    warn("No flags found.", "shootTwiceAutomated");
     return;
   }
 
-  if (shouldShootHighFlag || shouldShootMiddleFlag)
+  if (shootTopFlag)
   {
-    printf("flags\n%d\n%d\n", highFlag->signature, middleFlag->signature);
+    info("Detected top flag.", "shootTwiceAutomated");
+  }
+  if (shootMiddleFlag)
+  {
+    info("Detected middle flag.", "shootTwiceAutomated");
+  }
 
-    initialSign = 778;
+  aimForFlag(currentFlag);
+  zoomForFlag(currentFlag);
+  
+  info("Finished aiming and zooming", "shootTwiceAutomated");
 
-    while (true)
-    {
-      auto flag = (driveHigh) ? get_top_flag() : get_middle_flag();
-      if (flag == NULL)
-      {
-        continue;
-      }
-      if (flag->signature != RED_FLAG && flag->signature != BLUE_FLAG)
-      {
-        continue;
-      }
+  shootTopFlag = shouldShootTopFlag(currentFlag);
+  shootMiddleFlag = shouldShootMiddleFlag(currentFlag);
 
-      double dx = 25.0 - ((double)flag->width);
-      printf("%f, (%d %d)\n", dx, flag->width, flag->height);
-
-      if (abs(dx) <= 1.0)
-      {
-        drivetrain.tank(-initialSign * 0.0, -initialSign * 0.0);
-        pros::delay(30);
-        break;
-      }
-
-      int sign = (dx > 0) ? 1 : -1;
-      if (initialSign == 778)
-      {
-        initialSign = sign;
-      }
-      drivetrain.tank(sign * 0.2, sign * 0.2);
-      pros::delay(25);
-    }
-
-    highFlag = get_top_flag();
-    middleFlag = get_middle_flag();
-    driveHigh = false;
-    driveMiddle = false;
-    if (highFlag != NULL)
-    {
-      if (highFlag->signature == current_flag)
-      {
-        driveHigh = true;
-      }
-    }
-    if (middleFlag != NULL)
-    {
-      if (middleFlag->signature == current_flag)
-      {
-        driveMiddle = true;
-      }
-    }
-
-    printf("%d %d\n", driveHigh, driveMiddle);
-
-    if (driveHigh && driveMiddle)
-    {
-      shooterController->shootTwice();
-    }
-    else if (driveHigh)
-    {
-      shooterAngleController->control(ShooterAngle::upFlag);
-      pros::delay(200);
-      shooterController->shootOnce();
-    }
-    else if (driveMiddle)
-    {
-      shooterAngleController->control(ShooterAngle::downFlag);
-      pros::delay(200);
-      shooterController->shootOnce();
-    }
-    pros::delay(100);
+  if (shootTopFlag && shootMiddleFlag)
+  {
+    info("Shooting both flags.", "shootTwiceAutomated");
+    shooterController->shootTwice();
+  }
+  else if (shootTopFlag)
+  {
+    info("Shooting top flag.", "shootTwiceAutomated");
+    shooterAngleController->control(ShooterAngle::upFlag);
+    shooterAngleController->waitUntilSettled();
+    shooterController->shootOnce();
+  }
+  else if (shootMiddleFlag)
+  {
+    info("Shooting middle flag.", "shootTwiceAutomated");
+    shooterAngleController->control(ShooterAngle::downFlag);
+    shooterAngleController->waitUntilSettled();
+    shooterController->shootOnce();
+  }
+  else {
+    warn("No flags were detected.", "shootTwiceAutomated");
   }
 }

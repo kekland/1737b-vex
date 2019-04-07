@@ -2,55 +2,86 @@
 #include "vision_utils.h"
 
 const int DEFAULT_VALUE = 778;
-const int turnForFlagThreshold = 5;
-const int turnForFlagRestTime = 100;
-void turnForFlag(int currentFlag)
+void aimForFlag(int currentFlag)
 {
-  double prevDx = DEFAULT_VALUE;
+  info("Starting to aim for flag", "aimForFlag");
+
+  double prevPosition = DEFAULT_VALUE;
   int timeWhenDxOk = -1;
-  while (true)
+
+  flagAimingController.reset();
+  flagAimingController.setTarget(0.0);
+  while (!flagAimingController.isSettled())
   {
+    // Get the flag
     auto flag = getFlagForShooting(currentFlag);
 
+    // Check that this is the correct flag
     if (flag == NULL)
     {
+      warn("Flag was NULL.", "aimForFlag");
       continue;
     }
     if (flag->signature != currentFlag)
     {
+      warn("Flag's signature is incorrect.", "aimForFlag");
       continue;
     }
 
-    double dx = (double)flag->x_middle_coord;
-    dx += 4.0 * (currentFlag == RED_FLAG) ? 1 : -1;
+    // Get the value
+    double position = (double)flag->x_middle_coord;
 
-    if (prevDx == DEFAULT_VALUE)
+    // If the error is deviating too much from the previous error - skip
+    if (prevPosition == DEFAULT_VALUE)
     {
-      prevDx = dx;
+      prevPosition = position;
     }
-    if (abs(dx - prevDx) > 50)
+    if (abs(position - prevPosition) > 50)
     {
       continue;
     }
 
-    prevDx = dx;
-    bool ok = abs(dx) <= turnForFlagThreshold;
-    if (ok && timeWhenDxOk == -1)
-    {
-      timeWhenDxOk = pros::millis();
-    }
-    else if (ok && pros::millis() - timeWhenDxOk > turnForFlagRestTime)
-    {
-      drivetrain.tank(0.0, 0.0);
-      break;
-    }
-    else if (!ok)
-    {
-      timeWhenDxOk = -1;
-    }
-    
-    // TODO
-    //drivetrain.tank(sign * vel, -sign * vel);
+    // Step with the PID controller
+    double power = flagAimingController.step(position);
+    prevPosition = position;
+
+    drivetrain.tank(power, -power);
     pros::delay(25);
   }
+
+  info("Finished aiming for flag.", "aimForFlag");
+}
+
+const double zoomForFlagTarget = 25.0;
+void zoomForFlag(int currentFlag)
+{
+  info("Starting to zoom for flag", "zoomForFlag");
+
+  flagZoomingController.reset();
+  flagZoomingController.setTarget(zoomForFlagTarget);
+  while (!flagZoomingController.isSettled())
+  {
+    // Get the flag
+    auto flag = getFlagForShooting(currentFlag);
+
+    if (flag == NULL)
+    {
+      warn("Flag was NULL.", "zoomForFlag");
+      continue;
+    }
+    if (flag->signature != RED_FLAG && flag->signature != BLUE_FLAG)
+    {
+      warn("Flag's signature is incorrect.", "zoomForFlag");
+      continue;
+    }
+
+    double width = (double)flag->width;
+    double power = flagZoomingController.step(width);
+
+    drivetrain.forward(power);
+
+    pros::delay(25);
+  }
+  
+  info("Finished zooming for flag", "zoomForFlag");
 }
