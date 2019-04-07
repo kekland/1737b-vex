@@ -18,31 +18,37 @@ std::vector<pros::vision_object_s_t> getFlags()
 
 int getHighestFlagIndex(std::vector<pros::vision_object_s_t> flags, int skip = -1)
 {
-  int highestIndex = 0;
-  int highestY = -1000;
-  int secondHighestIndex = 0;
+  int highestIndex = -1;
 
   for (int i = 0; i < flags.size(); i++)
   {
     auto flag = flags[i];
+    auto highestFlag = flags[highestIndex];
 
     if (i == skip)
     {
       continue;
     }
 
-    if (highestY == -1000)
+    if (highestIndex == -1)
     {
-      highestY = flag.y_middle_coord;
       highestIndex = i;
       continue;
     }
 
     double flagArea = flag.width * flag.height;
-    double highestIndexArea = flags[highestIndex].width * flags[highestIndex].height;
-    if (flag.y_middle_coord > highestY || (abs(flag.y_middle_coord - highestY) < 20 && flagArea >= highestIndexArea))
+    double highestFlagArea = highestFlag.width * highestFlag.height;
+
+    bool isFlagHigher = flag.y_middle_coord > highestFlag.y_middle_coord;
+    bool isFlagMoreArea = flagArea >= highestFlagArea;
+    bool isFlagAlmostSameLevel = abs(flag.y_middle_coord - highestFlag.y_middle_coord) < 20;
+
+    bool isFlagAlmostSameArea = abs(flagArea - highestFlagArea) < 30;
+    bool isFlagCloserToCenter = abs(flag.x_middle_coord) < abs(highestFlag.x_middle_coord);
+    if ((isFlagHigher) ||
+        (isFlagAlmostSameLevel && isFlagMoreArea) ||
+        (isFlagAlmostSameLevel && isFlagAlmostSameArea && isFlagCloserToCenter))
     {
-      highestY = flag.y_middle_coord;
       highestIndex = i;
     }
   }

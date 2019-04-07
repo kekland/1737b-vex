@@ -1,6 +1,16 @@
 #include "main.h"
 #include "vision_utils.h"
 
+void aimForFlag(Flag currentFlag) {
+
+}
+
+void zoomForFlag(Flag currentFlag) {
+  
+}
+
+// DEPRECATED: NOW ADDING FILTERS
+/*
 const int DEFAULT_VALUE = 778;
 void aimForFlag(Flag currentFlag)
 {
@@ -87,3 +97,4 @@ void zoomForFlag(Flag currentFlag)
   
   info("Finished zooming for flag", "zoomForFlag");
 }
+*/
