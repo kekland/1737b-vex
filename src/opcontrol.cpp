@@ -36,7 +36,8 @@ void controlShooter()
   }
   else if (masterController.getDigital(ControllerDigital::R1))
   {
-    shootTwiceAutomated(gameState.getOpposingFlag());
+    Flag flag = gameState.getOpposingFlag();
+    opcontrolState.addTask(shootTwiceTask, &flag);
   }
   else
   {
@@ -82,12 +83,27 @@ void opcontrol()
   while (true)
   {
     // Analog sticks
-    drivetrain.tank(masterController.getAnalog(ControllerAnalog::leftY),
-                    masterController.getAnalog(ControllerAnalog::rightY));
+    if (opcontrolState.drivetrainEnabled)
+    {
+      drivetrain.tank(masterController.getAnalog(ControllerAnalog::leftY),
+                      masterController.getAnalog(ControllerAnalog::rightY));
+    }
+    if (opcontrolState.shooterAngleEnabled)
+    {
+      controlShooterAngle();
+    }
+    if (opcontrolState.shooterEnabled)
+    {
+      controlShooter();
+    }
+    if (opcontrolState.intakeEnabled)
+    {
+      controlIntake();
+    }
 
-    controlShooterAngle();
-    controlShooter();
-    controlIntake();
+    if(masterController.getDigital(ControllerDigital::left)) {
+      opcontrolState.killTask();
+    }
 
     // Temporary
     if (masterController.getDigital(ControllerDigital::right))

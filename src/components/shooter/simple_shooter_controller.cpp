@@ -26,10 +26,14 @@ void SimpleShooterController::shootTwice()
 
   // Set the angle beforehand and start intaking the ball
   shooterAngleController->control(nextAngle);
+
+  opcontrolState.intakeEnabled = false;
   intakeController->control(IntakeDirection::up);
   pros::delay(250);
 
   // Wait until angle is settled and shoot
   shooterAngleController->waitUntilSettled();
   shootOnce();
+  
+  opcontrolState.intakeEnabled = true;
 }

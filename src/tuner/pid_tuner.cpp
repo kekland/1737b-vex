@@ -3,28 +3,24 @@
 
 using namespace okapi;
 
-void tune()
+void DrivetrainForwardController::controllerSet(double ivalue)
 {
-  tuneAutoaim();
+  drivetrain.forward(ivalue);
 }
 
-void DrivetrainForwardController::controllerSet(double value)
+void DrivetrainTurnController::controllerSet(double ivalue)
 {
-  drivetrain.forward(value);
+  drivetrain.rotate(ivalue);
 }
 
-void DrivetrainTurnController::controllerSet(double value)
-{
-  drivetrain.rotate(value);
-}
 void tuneAutoaim()
 {
   info("Starting to tune autoaim.", "tuneAutoaim");
-  auto input = VisionAimInputController(Flag::red);
-  auto output = DrivetrainTurnController();
+  std::shared_ptr<VisionAimInputController> input = std::make_shared<VisionAimInputController>(VisionAimInputController(Flag::red));
+  std::shared_ptr<DrivetrainTurnController> output = std::make_shared<DrivetrainTurnController>(DrivetrainTurnController());
 
-  auto tuner = PIDTunerFactory::create(std::make_shared<okapi::ControllerInput<double>>(input),
-                                       std::make_shared<okapi::ControllerOutput<double>>(output), 
+  auto tuner = PIDTunerFactory::create(input,
+                                       output, 
                                        2_s, 0, 0.0, 0.2, 0.0, 0.2, 0.0, 0.2, 20);
   
   auto values = tuner.autotune();
@@ -35,4 +31,9 @@ void tuneAutoaim()
   fclose(outputFile);
   
   info("Finished tuning.", "tuneAutoaim");
+}
+
+void tune()
+{
+  tuneAutoaim();
 }

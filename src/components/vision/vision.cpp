@@ -66,3 +66,17 @@ void shootTwiceAutomated(Flag currentFlag)
     warn("No flags were detected.", "shootTwiceAutomated");
   }
 }
+
+void shootTwiceTask(void* param) {
+  opcontrolState.drivetrainEnabled = false;
+  opcontrolState.shooterAngleEnabled = false;
+  opcontrolState.shooterEnabled = false;
+
+  Flag * flag = (Flag*)(param);
+  shootTwiceAutomated(*flag);
+
+  opcontrolState.intakeEnabled = true;
+  opcontrolState.drivetrainEnabled = true;
+  opcontrolState.shooterAngleEnabled = true;
+  opcontrolState.shooterEnabled = true;
+}

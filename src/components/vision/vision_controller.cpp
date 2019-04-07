@@ -1,6 +1,7 @@
 #include "main.h"
-#include "vision_controller.h"
 #include "vision_utils.h"
+
+using namespace okapi;
 
 VisionAimInputController::VisionAimInputController(Flag flagToAim) {
   flag = flagToAim;
