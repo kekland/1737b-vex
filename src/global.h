@@ -9,5 +9,6 @@
 #include "./components/vision/vision.h"
 
 #include "./config/config.h"
+#include "./logger/logger.h"
 
 #endif

@@ -3,6 +3,9 @@
 
 #include "main.h"
 
+extern okapi::AbstractMotor::gearset driveGearset;
+extern okapi::ChassisScales driveScales;
+
 extern okapi::Motor driveLeftFront;
 extern okapi::Motor driveLeftBack;
 extern okapi::Motor driveRightFront;
@@ -15,4 +18,5 @@ extern okapi::Motor intake;
 extern okapi::Motor shooter;
 extern okapi::Motor shooterAngle;
 
+void configure_motors();
 #endif

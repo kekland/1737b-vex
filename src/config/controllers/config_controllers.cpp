@@ -1,0 +1,21 @@
+#include "main.h"
+#include "../../components/intake/basic_intake_controller.h"
+#include "../../components/shooter/basic_shooter_controller.h"
+#include "../../components/shooterAngle/basic_shooter_angle_controller.h"
+#include "../motors/config_motors.h"
+
+okapi::ChassisControllerIntegrated drivetrain = ChassisControllerFactory::create(driveLeft, driveRight, driveGearset, driveScales);
+
+auto _intakeController = SimpleIntakeController(intake, 200.0);
+BaseIntakeController *intakeController = &_intakeController;
+
+okapi::AsyncPosIntegratedController _saController = AsyncControllerFactory::posIntegrated(shooterAngle, 100);
+auto _shooterAngleController = SimpleShooterAngleController(_saController, {25.0, 60.0});
+BaseShooterAngleController *shooterAngleController = &_shooterAngleController;
+
+auto _shooterController = SimpleShooterController(shooter);
+BaseShooterController *shooterController = &_shooterController;
+
+void configure_controllers() {
+  drivetrain.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+}
