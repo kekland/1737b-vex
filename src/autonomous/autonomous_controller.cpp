@@ -1,5 +1,6 @@
 #include "main.h"
 
+using namespace okapi;
 void stop() {
   // Stop the drivetrain
   driveLeft.controllerSet(0.0);
@@ -7,14 +8,16 @@ void stop() {
 }
 
 double circumference = 3.1415 * 10.16;
-void drive(double cm) {
+void drive(QLength targetDistance) {
   // Reset everything
   driveLeft.tarePosition();
   driveRight.tarePosition();
   leftDriveController.reset();
   rightDriveController.reset();
 
+
   // Calculate required amount of degrees to travel
+  double cm = targetDistance.convert(centimeter);
   double degrees = (cm / circumference) * 360.0;
 
   // Set targets
@@ -36,8 +39,10 @@ void drive(double cm) {
     driveLeft.controllerSet(leftPower);
     driveRight.controllerSet(rightPower);
 
+    double leftCentimeters = (leftReading / 360.0) * circumference;
+    double rightCentimeters = (rightReading / 360.0) * circumference;
     // Log data
-    printf("%fd -> %fd | %fd -> %fd\n", leftReading, degrees, rightReading, degrees);
+    printf("%fcm -> %fcm | %fcm -> %fcm\n", leftCentimeters, cm, rightCentimeters, cm);
     pros::delay(10);
   }
   // Stop the drives
@@ -47,15 +52,17 @@ void drive(double cm) {
   pros::delay(150);
 }
 
-void turn(double targetDegrees) {
+void turn(QAngle targetDegrees) {
   // Reset everything
   gyro.reset();
   turnController.reset();
 
-  turnController.setTarget(targetDegrees);
+  double degs = targetDegrees.convert(degree);
+  turnController.setTarget(degs);
 
   info("Starting to turn.", "turn");
-  printf("Target: %fdeg\n", targetDegrees);
+  printf("Target: %fdeg\n", degs);
+  
   while(!turnController.isSettled()) {
     // Get current gyro value
     double currentValue = gyro.get() / 10.0;
