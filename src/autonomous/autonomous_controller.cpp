@@ -52,17 +52,17 @@ void drive(QLength targetDistance) {
   pros::delay(150);
 }
 
-void turn(QAngle targetDegrees) {
+void turn(QAngle targetDegrees, double turnMultiplier) {
   // Reset everything
   gyro.reset();
   turnController.reset();
 
-  double degs = targetDegrees.convert(degree);
+  double degs = targetDegrees.convert(degree) * turnMultiplier;
   turnController.setTarget(degs);
 
   info("Starting to turn.", "turn");
   printf("Target: %fdeg\n", degs);
-  
+
   while(!turnController.isSettled()) {
     // Get current gyro value
     double currentValue = gyro.get() / 10.0;
