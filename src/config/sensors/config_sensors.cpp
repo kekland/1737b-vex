@@ -10,13 +10,13 @@ void configure_vision() {
   visionSensor.set_led(65280);
 
   // Set the signatures
-  pros::vision_signature_s_t RED_SIG = visionSensor.signature_from_utility(1, 1787, 5837, 3812, 805, 2025, 1416, 1.600, 0);
-  pros::vision_signature_s_t BLUE_SIG = visionSensor.signature_from_utility(2, -3531, -2069, -2800, 7729, 13413, 10571, 3.000, 0);
+  pros::vision_signature_s_t RED_SIG = visionSensor.signature_from_utility(1, 2473, 9165, 5820, 273, 1123, 698, 1.400, 0);
+  pros::vision_signature_s_t BLUE_SIG = visionSensor.signature_from_utility(2, -3233, -2257, -2745, 8191, 12493, 10342, 3.000, 0);
 
   visionSensor.set_signature(1, &RED_SIG);
   visionSensor.set_signature(2, &BLUE_SIG);
   // Set the exposure
-  visionSensor.set_exposure(65);
+  visionSensor.set_exposure(60);
 
   //Wait 100ms for calibration
   pros::delay(100);

@@ -8,7 +8,8 @@ std::vector<pros::vision_object_s_t> getFlags()
   {
     auto flag = visionSensor.get_by_size(size);
     double area = flag.width * flag.height;
-    if (area >= 34.0 && (flag.signature == (int)Flag::red || flag.signature == (int)Flag::blue))
+    int diff = abs(flag.width - flag.height);
+    if (flag.width >= 8 && flag.height >= 8 && diff <= 8 && (flag.signature == (int)Flag::red || flag.signature == (int)Flag::blue))
     {
       flags.push_back(flag);
     }
