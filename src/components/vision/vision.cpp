@@ -8,7 +8,7 @@ bool shouldShootTopFlag(Flag currentFlag) {
 }
 
 bool shouldShootMiddleFlag(Flag currentFlag) {
-  auto middleFlag = getTopFlag();
+  auto middleFlag = getMiddleFlag();
   return checkFlag(middleFlag, currentFlag);
 }
 
@@ -68,15 +68,11 @@ void shootTwiceAutomated(Flag currentFlag)
 }
 
 void shootTwiceTask(void* param) {
-  opcontrolState.drivetrainEnabled = false;
-  opcontrolState.shooterAngleEnabled = false;
-  opcontrolState.shooterEnabled = false;
+  opcontrolState->drivetrainEnabled = false;
+  opcontrolState->shooterAngleEnabled = false;
+  opcontrolState->shooterEnabled = false;
 
-  Flag * flag = (Flag*)(param);
-  shootTwiceAutomated(*flag);
-
-  opcontrolState.intakeEnabled = true;
-  opcontrolState.drivetrainEnabled = true;
-  opcontrolState.shooterAngleEnabled = true;
-  opcontrolState.shooterEnabled = true;
+  shootTwiceAutomated(gameState->getOpposingFlag());
+  
+  opcontrolState->gracefulEndTask();
 }

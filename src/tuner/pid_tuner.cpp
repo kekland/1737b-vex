@@ -5,17 +5,17 @@ using namespace okapi;
 
 void DrivetrainForwardController::controllerSet(double ivalue)
 {
-  drivetrain.forward(ivalue);
+  drivetrain->forward(ivalue);
 }
 
 void DrivetrainTurnController::controllerSet(double ivalue)
 {
-  drivetrain.rotate(ivalue);
+  drivetrain->rotate(ivalue);
 }
 
 void tuneAutoaim()
 {
-  info("Starting to tune autoaim.", "tuneAutoaim");
+  /*info("Starting to tune autoaim.", "tuneAutoaim");
   std::shared_ptr<VisionAimInputController> input = std::make_shared<VisionAimInputController>(VisionAimInputController(Flag::red));
   std::shared_ptr<DrivetrainTurnController> output = std::make_shared<DrivetrainTurnController>(DrivetrainTurnController());
 
@@ -30,7 +30,7 @@ void tuneAutoaim()
   fprintf(outputFile, "%f %f %f\n", values.kP, values.kI, values.kD);
   fclose(outputFile);
   
-  info("Finished tuning.", "tuneAutoaim");
+  info("Finished tuning.", "tuneAutoaim");*/
 }
 
 void tune()

@@ -5,8 +5,8 @@
 using namespace okapi;
 
 void autonomousFront1() {
-  Alliance alliance = gameState.getAlliance();
-  Flag opposingFlag = gameState.getOpposingFlag();
+  Alliance alliance = gameState->getAlliance();
+  Flag opposingFlag = gameState->getOpposingFlag();
 
   double turnMultiplier = (alliance == Alliance::red)? 1.0 : -1.0;
 

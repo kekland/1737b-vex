@@ -4,12 +4,12 @@
 
 #include "main.h"
 
-extern okapi::IterativePosPIDController leftDriveController;
-extern okapi::IterativePosPIDController rightDriveController;
-extern okapi::IterativePosPIDController turnController;
+extern std::shared_ptr<okapi::IterativePosPIDController> leftDriveController;
+extern std::shared_ptr<okapi::IterativePosPIDController> rightDriveController;
+extern std::shared_ptr<okapi::IterativePosPIDController> turnController;
 
-extern okapi::IterativePosPIDController flagAimingController;
-extern okapi::IterativePosPIDController flagZoomingController;
+extern std::shared_ptr<okapi::IterativePosPIDController> flagAimingController;
+extern std::shared_ptr<okapi::IterativePosPIDController> flagZoomingController;
 
 void configure_pid();
 

@@ -16,10 +16,11 @@ public:
 
   void addTask(pros::task_fn_t function, void *parameters = (void*)__null);
   void killTask();
+  void gracefulEndTask();
 
   pros::Task* currentTask;
 };
 
-extern OpControlState opcontrolState;
+extern std::unique_ptr<OpControlState> opcontrolState;
 
 #endif

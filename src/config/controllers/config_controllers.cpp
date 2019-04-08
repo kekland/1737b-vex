@@ -4,20 +4,29 @@
 #include "../../components/shooterAngle/simple_shooter_angle_controller.h"
 #include "../motors/config_motors.h"
 
-okapi::ChassisControllerIntegrated drivetrain = okapi::ChassisControllerFactory::create(driveLeft, driveRight, driveGearset, driveScales);
+std::shared_ptr<okapi::ChassisControllerIntegrated> drivetrain;
 
-auto _intakeController = SimpleIntakeController(intake, 200.0);
-BaseIntakeController *intakeController = &_intakeController;
+BaseIntakeController *intakeController;
 
-okapi::AsyncPosIntegratedController _saController = okapi::AsyncControllerFactory::posIntegrated(shooterAngle, 100);
-auto _shooterAngleController = SimpleShooterAngleController(_saController, {25.0, 60.0});
-BaseShooterAngleController *shooterAngleController = &_shooterAngleController;
+std::shared_ptr<okapi::AsyncPosIntegratedController> _shooterAngleController;
+BaseShooterAngleController *shooterAngleController;
+BaseShooterController *shooterController;
 
-auto _shooterController = SimpleShooterController(shooter);
-BaseShooterController *shooterController = &_shooterController;
-
-void configure_controllers() {
+void configure_controllers()
+{
   info("Starting configuration", "config_controllers");
-  drivetrain.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+
+  drivetrain = okapi::ChassisControllerFactory::createPtr(*driveLeft, *driveRight, driveGearset, okapi::ChassisScales({4_in, 40_cm}));
+
+  intakeController = new SimpleIntakeController(*intake, 200.0);
+
+  _shooterAngleController = std::make_shared<okapi::AsyncPosIntegratedController>(
+      okapi::AsyncControllerFactory::posIntegrated(*shooterAngle, 100));
+  shooterAngleController = new SimpleShooterAngleController(*_shooterAngleController, {25.0, 60.0});
+
+  shooterController = new SimpleShooterController(*shooter);
+
+  drivetrain->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+
   info("Finished configuration", "config_controllers");
 }

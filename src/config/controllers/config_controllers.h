@@ -4,7 +4,7 @@
 
 #include "main.h"
 
-extern okapi::ChassisControllerIntegrated drivetrain;
+extern std::shared_ptr<okapi::ChassisControllerIntegrated> drivetrain;
 
 extern BaseIntakeController* intakeController;
 extern BaseShooterController* shooterController;

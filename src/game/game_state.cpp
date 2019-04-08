@@ -1,5 +1,14 @@
 #include "main.h"
 
+GameState::GameState() {
+  isAuton = false;
+  isDriver = false;
+  selectedAlliance = Alliance::none;
+  selectedAutonomous = -1;
+  timeDriverStarted = -1;
+  timeAutonStarted = -1;
+}
+
 void GameState::autonStarted()
 {
   isAuton = true;
@@ -63,4 +72,4 @@ int GameState::getAutonomous() {
   return selectedAutonomous;
 }
 
-GameState gameState = GameState();
+GameState* gameState;

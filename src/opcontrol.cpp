@@ -18,11 +18,11 @@ using namespace okapi;
 
 void controlShooterAngle()
 {
-  if (masterController.getDigital(ControllerDigital::up))
+  if (masterController->getDigital(ControllerDigital::up))
   {
     shooterAngleController->control(ShooterAngle::upFlag);
   }
-  else if (masterController.getDigital(ControllerDigital::down))
+  else if (masterController->getDigital(ControllerDigital::down))
   {
     shooterAngleController->control(ShooterAngle::downFlag);
   }
@@ -30,14 +30,14 @@ void controlShooterAngle()
 
 void controlShooter()
 {
-  if (masterController.getDigital(ControllerDigital::R2))
+  if (masterController->getDigital(ControllerDigital::R2))
   {
     shooterController->control(ShooterState::shoot);
   }
-  else if (masterController.getDigital(ControllerDigital::R1))
+  else if (masterController->getDigital(ControllerDigital::R1))
   {
-    Flag flag = gameState.getOpposingFlag();
-    opcontrolState.addTask(shootTwiceTask, &flag);
+    Flag flag = gameState->getOpposingFlag();
+    opcontrolState->addTask(shootTwiceTask, &flag);
   }
   else
   {
@@ -47,11 +47,11 @@ void controlShooter()
 
 void controlIntake()
 {
-  if (masterController.getDigital(ControllerDigital::L1))
+  if (masterController->getDigital(ControllerDigital::L1))
   {
     intakeController->control(IntakeDirection::up);
   }
-  else if (masterController.getDigital(ControllerDigital::L2))
+  else if (masterController->getDigital(ControllerDigital::L2))
   {
     intakeController->control(IntakeDirection::down);
   }
@@ -63,71 +63,107 @@ void controlIntake()
 
 void opcontrol()
 {
-  if (TUNING_PID)
+  /*if (TUNING_PID)
   {
     warn("Detected that we are tuning PID now. Don't forget to turn this off.", "opcontrol");
     info("Waiting for R2 button press", "opcontrol");
     while (true)
     {
-      if (masterController.getDigital(ControllerDigital::R2))
+      if (masterController->getDigital(ControllerDigital::R2))
       {
         tune();
         return;
       }
     }
     return;
-  }
+  }*/
 
+  info("Opcontrol start", "opcontrol");
   bool rumbled = false;
-  gameState.driverStarted();
+  gameState->driverStarted();
+
   while (true)
   {
     // Analog sticks
-    if (opcontrolState.drivetrainEnabled)
+    if (opcontrolState->drivetrainEnabled)
     {
-      drivetrain.tank(masterController.getAnalog(ControllerAnalog::leftY),
-                      masterController.getAnalog(ControllerAnalog::rightY));
+      drivetrain->tank(masterController->getAnalog(ControllerAnalog::leftY),
+                       masterController->getAnalog(ControllerAnalog::rightY));
     }
-    if (opcontrolState.shooterAngleEnabled)
+    if (opcontrolState->shooterAngleEnabled)
     {
       controlShooterAngle();
     }
-    if (opcontrolState.shooterEnabled)
+    if (opcontrolState->shooterEnabled)
     {
       controlShooter();
     }
-    if (opcontrolState.intakeEnabled)
+    if (opcontrolState->intakeEnabled)
     {
       controlIntake();
     }
-
-    if(masterController.getDigital(ControllerDigital::left)) {
-      opcontrolState.killTask();
+    
+    if (masterController->getDigital(ControllerDigital::left))
+    {
+      opcontrolState->killTask();
     }
 
     // Temporary
-    if (masterController.getDigital(ControllerDigital::right))
+    if (masterController->getDigital(ControllerDigital::right))
     {
-      while (masterController.getDigital(ControllerDigital::right))
+      while (masterController->getDigital(ControllerDigital::right))
       {
         pros::delay(20);
       }
 
-      Alliance alliance = gameState.getAlliance();
-      gameState.setAlliance(alliance == Alliance::red ? Alliance::blue : Alliance::red);
+      Alliance alliance = gameState->getAlliance();
+      gameState->setAlliance(alliance == Alliance::red ? Alliance::blue : Alliance::red);
+    }
+    pros::delay(25);
+  }
+  /*while (true)
+  {
+    info("Opcontrol tick", "opcontrol");
+    // Analog sticks
+    if (opcontrolState->drivetrainEnabled)
+    {
+      drivetrain->tank(masterController->getAnalog(ControllerAnalog::leftY),
+                       masterController->getAnalog(ControllerAnalog::rightY));
+    }
+    if (opcontrolState->shooterAngleEnabled)
+    {
+      controlShooterAngle();
+    }
+    if (opcontrolState->shooterEnabled)
+    {
+      controlShooter();
+    }
+    if (opcontrolState->intakeEnabled)
+    {
+      controlIntake();
     }
 
-    if (masterController.getDigital(ControllerDigital::left))
+    if (masterController->getDigital(ControllerDigital::left))
+    {
+      opcontrolState->killTask();
+    }
+
+    // Temporary
+    if (masterController->getDigital(ControllerDigital::right))
+    {
+      while (masterController->getDigital(ControllerDigital::right))
+      {
+        pros::delay(20);
+      }
+
+      Alliance alliance = gameState->getAlliance();
+      gameState->setAlliance(alliance == Alliance::red ? Alliance::blue : Alliance::red);
+    }
+
+    if (masterController->getDigital(ControllerDigital::left))
     {
       autonomous();
     }
-
-    if (gameState.getTimeFromGameStartSeconds() > 75.0 && !rumbled)
-    {
-      masterController.rumble(".-. .-.");
-      rumbled = true;
-    }
-
     pros::delay(25);
-  }
+  }*/
 }

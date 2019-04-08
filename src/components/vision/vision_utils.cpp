@@ -4,10 +4,11 @@ std::vector<pros::vision_object_s_t> getFlags()
 {
   std::vector<pros::vision_object_s_t> flags;
 
-  for (int size = 0; size < 3; size++)
+  for (int size = 0; size < 9; size++)
   {
     auto flag = visionSensor.get_by_size(size);
-    if (flag.width >= 6 && flag.height >= 6 && (flag.signature == (int)Flag::red || flag.signature == (int)Flag::blue))
+    double area = flag.width * flag.height;
+    if (area >= 34.0 && (flag.signature == (int)Flag::red || flag.signature == (int)Flag::blue))
     {
       flags.push_back(flag);
     }
@@ -20,9 +21,28 @@ int getHighestFlagIndex(std::vector<pros::vision_object_s_t> flags, int skip = -
 {
   int highestIndex = -1;
 
+  for(int i = 0; i < flags.size(); i++) {
+    for(int j = 0; j < flags.size(); j++) {
+      int yPosI = -(flags[i].y_middle_coord - 106);
+      int yPosJ = -(flags[j].y_middle_coord - 106);
+
+      int dxI = abs(flags[i].x_middle_coord);
+      int dxJ = abs(flags[j].x_middle_coord);
+
+      if(yPosI < yPosJ) {
+        pros::vision_object_s_t temp = flags[i];
+        flags[i] = flags[j];
+        flags[j] = temp;
+      }
+    }
+  }
+
   for (int i = 0; i < flags.size(); i++)
   {
     auto flag = flags[i];
+    printf("flag: pos: (%d %d) size: (%d %d) sig: %s\n", flag.x_middle_coord, flag.y_middle_coord, flag.width, flag.height,
+           flag.signature == (int)Flag::red ? "red" : "blue");
+    /*auto flag = flags[i];
     auto highestFlag = flags[highestIndex];
 
     if (i == skip)
@@ -50,8 +70,10 @@ int getHighestFlagIndex(std::vector<pros::vision_object_s_t> flags, int skip = -
         (isFlagAlmostSameLevel && isFlagAlmostSameArea && isFlagCloserToCenter))
     {
       highestIndex = i;
-    }
+    }*/
   }
+
+  printf("highest: %d, skip: %d\n", highestIndex, skip);
 
   return highestIndex;
 }
@@ -62,12 +84,21 @@ pros::vision_object_s_t *getTopFlag()
 
   int total = flags.size();
 
+  printf("total top %d\n", total);
   if (total < 2)
   {
     return NULL;
   }
 
-  return &flags[getHighestFlagIndex(flags)];
+  int highestFlagIndex = getHighestFlagIndex(flags);
+
+  if (highestFlagIndex == -1)
+  {
+    return NULL;
+  }
+
+  printf("high flag signature: %d\n", flags[highestFlagIndex].signature);
+  return &(flags[highestFlagIndex]);
 }
 
 pros::vision_object_s_t *getMiddleFlag()
@@ -76,6 +107,7 @@ pros::vision_object_s_t *getMiddleFlag()
 
   int total = flags.size();
 
+  printf("total middle %d\n", total);
   if (total < 2)
   {
     return NULL;
@@ -83,8 +115,15 @@ pros::vision_object_s_t *getMiddleFlag()
 
   int topFlagIndex = getHighestFlagIndex(flags);
   int middleFlagIndex = getHighestFlagIndex(flags, topFlagIndex);
+  printf("middle top index %d, middle middle index:\n", topFlagIndex, middleFlagIndex);
 
-  return &flags[middleFlagIndex];
+  if (middleFlagIndex == -1)
+  {
+    return NULL;
+  }
+
+  printf("middle flag signature: %d\n", flags[middleFlagIndex].signature);
+  return &(flags[middleFlagIndex]);
 }
 
 bool checkFlag(pros::vision_object_s_t *flag, Flag currentFlag)

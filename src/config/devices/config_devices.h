@@ -4,7 +4,7 @@
 
 #include "main.h"
 
-extern okapi::Controller masterController;
+extern okapi::Controller* masterController;
 
 void configure_devices();
 

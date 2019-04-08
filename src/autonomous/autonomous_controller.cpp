@@ -3,15 +3,15 @@
 using namespace okapi;
 void stop() {
   // Stop the drivetrain
-  driveLeft.controllerSet(0.0);
-  driveRight.controllerSet(0.0);
+  driveLeft->controllerSet(0.0);
+  driveRight->controllerSet(0.0);
 }
 
 double circumference = 3.1415 * 10.16;
 void drive(QLength targetDistance) {
   // Reset everything
-  driveLeft.tarePosition();
-  driveRight.tarePosition();
+  driveLeft->tarePosition();
+  driveRight->tarePosition();
   leftDriveController.reset();
   rightDriveController.reset();
 
@@ -21,23 +21,23 @@ void drive(QLength targetDistance) {
   double degrees = (cm / circumference) * 360.0;
 
   // Set targets
-  leftDriveController.setTarget(degrees);
-  rightDriveController.setTarget(degrees);
+  leftDriveController->setTarget(degrees);
+  rightDriveController->setTarget(degrees);
 
   info("Starting to drive.", "drive");
   printf("Target: %fcm\n", cm);
-  while(!leftDriveController.isSettled() && !rightDriveController.isSettled()) {
+  while(!leftDriveController->isSettled() && !rightDriveController->isSettled()) {
     // Get current positions
-    double leftReading = driveLeft.getPosition();
-    double rightReading = driveRight.getPosition();
+    double leftReading = driveLeft->getPosition();
+    double rightReading = driveRight->getPosition();
 
     // Get the powers
-    double leftPower = leftDriveController.step(leftReading);
-    double rightPower = rightDriveController.step(rightReading);
+    double leftPower = leftDriveController->step(leftReading);
+    double rightPower = rightDriveController->step(rightReading);
     
     // Apply powers
-    driveLeft.controllerSet(leftPower);
-    driveRight.controllerSet(rightPower);
+    driveLeft->controllerSet(leftPower);
+    driveRight->controllerSet(rightPower);
 
     double leftCentimeters = (leftReading / 360.0) * circumference;
     double rightCentimeters = (rightReading / 360.0) * circumference;
@@ -58,21 +58,21 @@ void turn(QAngle targetDegrees, double turnMultiplier) {
   turnController.reset();
 
   double degs = targetDegrees.convert(degree) * turnMultiplier;
-  turnController.setTarget(degs);
+  turnController->setTarget(degs);
 
   info("Starting to turn.", "turn");
   printf("Target: %fdeg\n", degs);
 
-  while(!turnController.isSettled()) {
+  while(!turnController->isSettled()) {
     // Get current gyro value
     double currentValue = gyro.get() / 10.0;
 
     // Get the power for motors
-    double power = turnController.step(currentValue);
+    double power = turnController->step(currentValue);
 
     // Set the power
-    driveLeft.controllerSet(power);
-    driveRight.controllerSet(-power);
+    driveLeft->controllerSet(power);
+    driveRight->controllerSet(-power);
 
     // Log data
     printf("%fdeg -> %fdeg\n", currentValue, targetDegrees);

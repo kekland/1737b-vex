@@ -7,11 +7,17 @@
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	configure();
-	
+	info("Starting initialization.", "initialize");
+
 	//TODO: Remove those and add LCD implementation
-	gameState.setAlliance(Alliance::red);
-	gameState.setAutonomous(0);
+	gameState = new GameState();
+	opcontrolState = std::make_unique<OpControlState>();
+	gameState->setAlliance(Alliance::red);
+	gameState->setAutonomous(0);
+
+	configure();
+
+	info("Finished initialization.", "initialize");
 }
 
 /**

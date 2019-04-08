@@ -13,18 +13,19 @@
  * from where it left off.
  */
 
-using void_f = void (*)();
+//using void_f = void (*)();
 
-void_f autonomousVariants[] = {&autonomousFront1};
+//void_f autonomousVariants[] = {&autonomousFront1};
 
 void autonomous()
 {
-  int selectedAutonomous = gameState.getAutonomous();
+  info("Autonomous start", "autonomous");
+  /*int selectedAutonomous = gameState->getAutonomous();
 
   if(selectedAutonomous == -1) {
     return;
   }
 
-  gameState.autonStarted();
-  (*autonomousVariants[selectedAutonomous])();
+  gameState->autonStarted();
+  (*autonomousVariants[selectedAutonomous])();*/
 }

@@ -6,6 +6,7 @@
 
 class GameState {
   public:
+    GameState();
     int getTimeFromGameStartMillis();
     double getTimeFromGameStartSeconds();
 
@@ -21,13 +22,13 @@ class GameState {
     int getAutonomous();
 
   protected:
-    Alliance selectedAlliance = Alliance::none;
-    int selectedAutonomous = -1;
-    int timeAutonStarted = -1;
-    int timeDriverStarted = -1;
-    bool isAuton = false;
-    bool isDriver = false;
+    Alliance selectedAlliance;
+    int selectedAutonomous;
+    int timeAutonStarted;
+    int timeDriverStarted;
+    bool isAuton;
+    bool isDriver;
 };
 
-extern GameState gameState;
+extern GameState* gameState;
 #endif
