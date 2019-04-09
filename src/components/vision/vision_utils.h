@@ -4,7 +4,7 @@
 
 #include "main.h"
 std::vector<pros::vision_object_s_t> getFlags();
-int getHighestFlagIndex(std::vector<pros::vision_object_s_t> flags, int skip = -1);
+std::pair<pros::vision_object_s_t*, pros::vision_object_s_t*> getFlagPair(std::vector<pros::vision_object_s_t> flags);
 pros::vision_object_s_t* getTopFlag();
 pros::vision_object_s_t* getMiddleFlag();
 

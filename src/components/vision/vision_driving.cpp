@@ -3,11 +3,17 @@
 
 void aimForFlag(Flag currentFlag) {
   info("Starting to aim for flag", "aimForFlag");
-  okapi::AverageFilter<5> filter;
+  okapi::AverageFilter<3> filter;
   
-  flagAimingController.reset();
+  flagAimingController->reset();
   flagAimingController->setTarget(0.0);
-  while(!flagAimingController->isSettled()) {
+
+  int iters = 0;
+  while(true) {
+    if(flagAimingController->isSettled()) {
+      break;
+    }
+    pros::delay(25);
     auto flag = getFlagForShooting(currentFlag);
     
     if (flag == NULL)
@@ -19,11 +25,14 @@ void aimForFlag(Flag currentFlag) {
     double position = (double)flag->x_middle_coord;
     double filteredPosition = filter.filter(position);
 
-    double power = flagAimingController->step(filteredPosition);
-    drivetrain->tank(power, -power);
+    if(iters < 3) filteredPosition = position;
 
-    printf("(%f) %f -> %f\n", position, filteredPosition, 0.0);
-    pros::delay(25);
+    
+    double power = flagAimingController->step(filteredPosition);
+    drivetrain->tank(-power, power);
+    iters++;
+
+    printf("(%f) %f -> %f with power %f\n", position, filteredPosition, 0.0, power);
   }
 
   drivetrain->tank(0.0, 0.0);
@@ -34,12 +43,17 @@ void aimForFlag(Flag currentFlag) {
 const double zoomForFlagTarget = 25.0;
 void zoomForFlag(Flag currentFlag) {
   info("Starting to zoom for flag", "zoomForFlag");
-  okapi::AverageFilter<5> filter;
+  okapi::AverageFilter<3> filter;
 
-  flagZoomingController.reset();
+  flagZoomingController->reset();
   flagZoomingController->setTarget(zoomForFlagTarget);
-  while (!flagZoomingController->isSettled())
+  int iters = 0;
+  while (true)
   {
+    if(flagZoomingController->isSettled()) {
+      break;
+    }
+    pros::delay(25);
     // Get the flag
     auto flag = getFlagForShooting(currentFlag);
 
@@ -51,12 +65,13 @@ void zoomForFlag(Flag currentFlag) {
 
     double width = (double)flag->width;
     double filteredWidth = filter.filter(width);
+    if(iters < 3) filteredWidth = width;
     double power = flagZoomingController->step(filteredWidth);
 
-    drivetrain->forward(power);
+    drivetrain->tank(power, power);
+    iters++;
 
-    printf("(%f) %f -> %f\n", width, filteredWidth, zoomForFlagTarget);
-    pros::delay(25);
+    printf("(%f) %f -> %f with power %f\n", width, filteredWidth, zoomForFlagTarget, power);
   }
   
   drivetrain->tank(0.0, 0.0);

@@ -33,10 +33,9 @@ void configure_pid()
       std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.0124, 0.0, 0.00018, 0.0));
 
   flagAimingController =
-      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.01, 0.0, 0.0));
-
+      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.003, 0.025, 0.0001));
   flagZoomingController =
-      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.01, 0.0, 0.0));
+      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.089, 0.01, 0.0000));
 
   // Set gains
   leftDriveController->setGains(drivingKp, drivingKi, drivingKd);
@@ -46,8 +45,8 @@ void configure_pid()
   leftDriveController->setOutputLimits(0.5, -0.5);
   rightDriveController->setOutputLimits(0.5, -0.5);
   turnController->setOutputLimits(0.5, -0.5);
-  flagAimingController->setOutputLimits(0.5, -0.5);
-  flagZoomingController->setOutputLimits(0.5, -0.5);
+  flagAimingController->setOutputLimits(0.23, -0.23);
+  flagZoomingController->setOutputLimits(0.23, -0.23);
 
   info("Finished configuration", "config_pid");
 }

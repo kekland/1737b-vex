@@ -84,6 +84,7 @@ void opcontrol()
 
   while (true)
   {
+    printf("%f\n", ultrasonic.get());
     // Analog sticks
     if (opcontrolState->drivetrainEnabled)
     {

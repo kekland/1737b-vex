@@ -51,7 +51,7 @@ void shootTwiceAutomated(Flag currentFlag)
   else if (shootTopFlag)
   {
     info("Shooting top flag.", "shootTwiceAutomated");
-    shooterAngleController->control(ShooterAngle::upFlag);
+     shooterAngleController->control(ShooterAngle::upFlag);
     shooterAngleController->waitUntilSettled();
     shooterController->shootOnce();
   }
