@@ -63,7 +63,7 @@ void controlIntake()
 
 void opcontrol()
 {
-  /*if (TUNING_PID)
+  if (TUNING_PID)
   {
     warn("Detected that we are tuning PID now. Don't forget to turn this off.", "opcontrol");
     info("Waiting for R2 button press", "opcontrol");
@@ -76,15 +76,14 @@ void opcontrol()
       }
     }
     return;
-  }*/
+  }
 
-  info("Opcontrol start", "opcontrol");
+  info("Opcontrol start.", "opcontrol");
   bool rumbled = false;
   gameState->driverStarted();
 
   while (true)
   {
-    printf("%f\n", ultrasonic.get());
     // Analog sticks
     if (opcontrolState->drivetrainEnabled)
     {
@@ -103,10 +102,14 @@ void opcontrol()
     {
       controlIntake();
     }
-    
+
     if (masterController->getDigital(ControllerDigital::left))
     {
       opcontrolState->killTask();
+    }
+
+    if(masterController->getDigital(ControllerDigital::B)) {
+      autonomous();
     }
 
     // Temporary
@@ -119,6 +122,7 @@ void opcontrol()
 
       Alliance alliance = gameState->getAlliance();
       gameState->setAlliance(alliance == Alliance::red ? Alliance::blue : Alliance::red);
+      visionSensor.set_led((alliance == Alliance::red) ? 16711680 : 255);
     }
     pros::delay(25);
   }

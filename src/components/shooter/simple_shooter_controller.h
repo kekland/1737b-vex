@@ -13,6 +13,7 @@ public:
   void shootOnce() override;
 
   void shootTwice() override;
+  void shootTwiceTask(void *param) override;
 };
 
 #endif

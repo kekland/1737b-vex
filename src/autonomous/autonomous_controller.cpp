@@ -12,8 +12,8 @@ void drive(QLength targetDistance) {
   // Reset everything
   driveLeft->tarePosition();
   driveRight->tarePosition();
-  leftDriveController.reset();
-  rightDriveController.reset();
+  leftDriveController->reset();
+  rightDriveController->reset();
 
 
   // Calculate required amount of degrees to travel
@@ -41,6 +41,11 @@ void drive(QLength targetDistance) {
 
     double leftCentimeters = (leftReading / 360.0) * circumference;
     double rightCentimeters = (rightReading / 360.0) * circumference;
+
+    if(abs(leftDriveController->getError()) < 15.0 && abs(rightDriveController->getError() < 15.0)) {
+      break;
+    }
+
     // Log data
     printf("%fcm -> %fcm | %fcm -> %fcm\n", leftCentimeters, cm, rightCentimeters, cm);
     pros::delay(10);
@@ -48,14 +53,12 @@ void drive(QLength targetDistance) {
   // Stop the drives
   stop();
   info("Finished driving.", "drive");
-
-  pros::delay(150);
 }
 
 void turn(QAngle targetDegrees, double turnMultiplier) {
   // Reset everything
   gyro.reset();
-  turnController.reset();
+  turnController->reset();
 
   double degs = targetDegrees.convert(degree) * turnMultiplier;
   turnController->setTarget(degs);
@@ -83,5 +86,4 @@ void turn(QAngle targetDegrees, double turnMultiplier) {
   // Stop the drives
   stop();
   info("Finished turning.", "turn");
-  pros::delay(150);
 }

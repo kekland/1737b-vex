@@ -25,6 +25,8 @@ double VisionZoomInputController::controllerGet() {
   if(flagToShoot != NULL) {
     warn("Flag to shoot was NULL.", "VisionZoomInputController::controllerGet");
   }
+  double area = (double)flagToShoot->width * (double)flagToShoot->height;
+  printf("Area: %f\n", area);
 
-  return (double)flagToShoot->width;
+  return area;
 }

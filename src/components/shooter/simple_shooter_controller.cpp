@@ -28,12 +28,18 @@ void SimpleShooterController::shootTwice()
   shooterAngleController->control(nextAngle);
 
   opcontrolState->intakeEnabled = false;
+  intakeController->control(IntakeDirection::down);
+  pros::delay(100);
   intakeController->control(IntakeDirection::up);
-  pros::delay(250);
+  pros::delay(450);
 
   // Wait until angle is settled and shoot
   shooterAngleController->waitUntilSettled();
   shootOnce();
   
   opcontrolState->intakeEnabled = true;
+}
+
+void SimpleShooterController::shootTwiceTask(void* params) {
+  
 }

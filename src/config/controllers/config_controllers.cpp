@@ -10,7 +10,7 @@ BaseIntakeController *intakeController;
 
 std::shared_ptr<okapi::AsyncPosIntegratedController> _shooterAngleController;
 BaseShooterAngleController *shooterAngleController;
-BaseShooterController *shooterController;
+SimpleShooterController *shooterController;
 
 void configure_controllers()
 {
@@ -20,9 +20,11 @@ void configure_controllers()
 
   intakeController = new SimpleIntakeController(*intake, 200.0);
 
+  shooterAngle->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+
   _shooterAngleController = std::make_shared<okapi::AsyncPosIntegratedController>(
       okapi::AsyncControllerFactory::posIntegrated(*shooterAngle, 100));
-  shooterAngleController = new SimpleShooterAngleController(*_shooterAngleController, {25.0, 60.0});
+  shooterAngleController = new SimpleShooterAngleController(*_shooterAngleController, {15.0, 60.0});
 
   shooterController = new SimpleShooterController(*shooter);
 

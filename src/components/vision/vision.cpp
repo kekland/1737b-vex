@@ -2,12 +2,14 @@
 #include "vision_utils.h"
 #include "vision_driving.h"
 
-bool shouldShootTopFlag(Flag currentFlag) {
+bool shouldShootTopFlag(Flag currentFlag)
+{
   auto topFlag = getTopFlag();
   return checkFlag(topFlag, currentFlag);
 }
 
-bool shouldShootMiddleFlag(Flag currentFlag) {
+bool shouldShootMiddleFlag(Flag currentFlag)
+{
   auto middleFlag = getMiddleFlag();
   return checkFlag(middleFlag, currentFlag);
 }
@@ -28,51 +30,65 @@ void shootTwiceAutomated(Flag currentFlag)
 
   if (shootTopFlag)
   {
+    shooterAngleController->control(ShooterAngle::upFlag);
     info("Detected top flag.", "shootTwiceAutomated");
   }
   if (shootMiddleFlag)
   {
+    shooterAngleController->control(ShooterAngle::downFlag);
     info("Detected middle flag.", "shootTwiceAutomated");
   }
 
   aimForFlag(currentFlag);
-  zoomForFlag(currentFlag);
-  
-  info("Finished aiming and zooming", "shootTwiceAutomated");
 
-  shootTopFlag = shouldShootTopFlag(currentFlag);
-  shootMiddleFlag = shouldShootMiddleFlag(currentFlag);
+  pros::vision_object_s_t *flagToShoot = NULL;
+  while (flagToShoot == NULL)
+  {
+    flagToShoot = getFlagForShooting(currentFlag);
+  }
 
-  if (shootTopFlag && shootMiddleFlag)
+  if (flagToShoot->width > 18)
   {
-    info("Shooting both flags.", "shootTwiceAutomated");
-    shooterController->shootTwice();
-  }
-  else if (shootTopFlag)
-  {
-    info("Shooting top flag.", "shootTwiceAutomated");
-     shooterAngleController->control(ShooterAngle::upFlag);
-    shooterAngleController->waitUntilSettled();
-    shooterController->shootOnce();
-  }
-  else if (shootMiddleFlag)
-  {
-    info("Shooting middle flag.", "shootTwiceAutomated");
-    shooterAngleController->control(ShooterAngle::downFlag);
-    shooterAngleController->waitUntilSettled();
-    shooterController->shootOnce();
-  }
-  else {
-    warn("No flags were detected.", "shootTwiceAutomated");
+    zoomForFlag(currentFlag);
+    aimForFlag(currentFlag);
+    info("Finished aiming and zooming", "shootTwiceAutomated");
+
+    shootTopFlag = shouldShootTopFlag(currentFlag);
+    shootMiddleFlag = shouldShootMiddleFlag(currentFlag);
+
+    if (shootTopFlag && shootMiddleFlag)
+    {
+      info("Shooting both flags.", "shootTwiceAutomated");
+      shooterController->shootTwice();
+    }
+    else if (shootTopFlag)
+    {
+      info("Shooting top flag.", "shootTwiceAutomated");
+      shooterAngleController->control(ShooterAngle::upFlag);
+      shooterAngleController->waitUntilSettled();
+      shooterController->shootOnce();
+    }
+    else if (shootMiddleFlag)
+    {
+      info("Shooting middle flag.", "shootTwiceAutomated");
+      shooterAngleController->control(ShooterAngle::downFlag);
+      shooterAngleController->waitUntilSettled();
+      shooterController->shootOnce();
+    }
+    else
+    {
+      warn("No flags were detected.", "shootTwiceAutomated");
+    }
   }
 }
 
-void shootTwiceTask(void* param) {
+void shootTwiceTask(void *param)
+{
   opcontrolState->drivetrainEnabled = false;
   opcontrolState->shooterAngleEnabled = false;
   opcontrolState->shooterEnabled = false;
 
   shootTwiceAutomated(gameState->getOpposingFlag());
-  
+
   opcontrolState->gracefulEndTask();
 }

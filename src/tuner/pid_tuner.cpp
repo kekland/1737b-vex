@@ -15,13 +15,13 @@ void DrivetrainTurnController::controllerSet(double ivalue)
 
 void tuneAutoaim()
 {
-  /*info("Starting to tune autoaim.", "tuneAutoaim");
-  std::shared_ptr<VisionAimInputController> input = std::make_shared<VisionAimInputController>(VisionAimInputController(Flag::red));
-  std::shared_ptr<DrivetrainTurnController> output = std::make_shared<DrivetrainTurnController>(DrivetrainTurnController());
+  info("Starting to tune autoaim.", "tuneAutoaim");
+  std::shared_ptr<VisionZoomInputController> input = std::make_shared<VisionZoomInputController>(VisionZoomInputController(Flag::red));
+  std::shared_ptr<DrivetrainForwardController> output = std::make_shared<DrivetrainForwardController>(DrivetrainForwardController());
 
   auto tuner = PIDTunerFactory::create(input,
                                        output, 
-                                       2_s, 0, 0.0, 0.2, 0.0, 0.2, 0.0, 0.2, 20);
+                                       2_s, 0, 760.0, 0.01, 0.0, 0.01, 0.0, 0.01, 30);
   
   auto values = tuner.autotune();
   printf("Tuned: %f %f %f\n", values.kP, values.kI, values.kD);
@@ -30,7 +30,7 @@ void tuneAutoaim()
   fprintf(outputFile, "%f %f %f\n", values.kP, values.kI, values.kD);
   fclose(outputFile);
   
-  info("Finished tuning.", "tuneAutoaim");*/
+  info("Finished tuning.", "tuneAutoaim");
 }
 
 void tune()
