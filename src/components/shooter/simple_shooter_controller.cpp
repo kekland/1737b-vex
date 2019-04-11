@@ -31,7 +31,7 @@ void SimpleShooterController::shootTwice()
   intakeController->control(IntakeDirection::down);
   pros::delay(100);
   intakeController->control(IntakeDirection::up);
-  pros::delay(450);
+  pros::delay(650);
 
   // Wait until angle is settled and shoot
   shooterAngleController->waitUntilSettled();

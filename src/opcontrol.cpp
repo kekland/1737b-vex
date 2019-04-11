@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include "./autonomous/autonomous_controller.h"
 using namespace okapi;
 
 /**
@@ -66,7 +66,7 @@ void opcontrol()
   if (TUNING_PID)
   {
     warn("Detected that we are tuning PID now. Don't forget to turn this off.", "opcontrol");
-    info("Waiting for R2 button press", "opcontrol");
+    info("Waiting for R2 button press", "opcontrol.");
     while (true)
     {
       if (masterController->getDigital(ControllerDigital::R2))
@@ -82,8 +82,67 @@ void opcontrol()
   bool rumbled = false;
   gameState->driverStarted();
 
+  double kp = 0.002270;
+  double ki = 0.000030;
+  double kd = 0.000090;
   while (true)
   {
+    /*drivetrain->tank(masterController->getAnalog(ControllerAnalog::leftY),
+                     masterController->getAnalog(ControllerAnalog::rightY));
+
+    if (masterController->getDigital(ControllerDigital::L1))
+    {
+      kp += 0.00001;
+    }
+    else if (masterController->getDigital(ControllerDigital::L2))
+    {
+      kp -= 0.00001;
+    }
+
+    if (masterController->getDigital(ControllerDigital::R1))
+    {
+      ki += 0.00001;
+    }
+    else if (masterController->getDigital(ControllerDigital::R2))
+    {
+      ki -= 0.00001;
+    }
+
+    if (masterController->getDigital(ControllerDigital::up))
+    {
+      kd += 0.00001;
+    }
+    else if (masterController->getDigital(ControllerDigital::down))
+    {
+      kd -= 0.00001;
+    }
+
+    if (masterController->getDigital(ControllerDigital::X))
+    {
+      gyro.reset();
+    }
+
+    pros::lcd::print(0, "%f %f %f", kp, ki, kd);
+    pros::lcd::print(1, "%f", gyro.get() / 10.0);
+    leftDriveController->setGains(kp, ki, kd);
+    rightDriveController->setGains(kp, ki, kd);
+
+    if (masterController->getDigital(ControllerDigital::B))
+    {
+      turn(90.0_deg, 1.0);
+    }
+    if (masterController->getDigital(ControllerDigital::A))
+    {
+      drive(5_ft);
+    }
+    if (masterController->getDigital(ControllerDigital::Y))
+    {
+      drive(2_ft);
+    }
+
+    pros::delay(20);
+
+    continue;*/
     // Analog sticks
     if (opcontrolState->drivetrainEnabled)
     {
@@ -105,10 +164,12 @@ void opcontrol()
 
     if (masterController->getDigital(ControllerDigital::left))
     {
-      opcontrolState->killTask();
+      shooterController->shootTwice();
+      //opcontrolState->killTask();
     }
 
-    if(masterController->getDigital(ControllerDigital::B)) {
+    if (masterController->getDigital(ControllerDigital::B))
+    {
       autonomous();
     }
 
@@ -124,9 +185,11 @@ void opcontrol()
       gameState->setAlliance(alliance == Alliance::red ? Alliance::blue : Alliance::red);
       visionSensor.set_led((alliance == Alliance::red) ? 16711680 : 255);
     }
+
     pros::delay(25);
   }
-  /*while (true)
+}
+/*while (true)
   {
     info("Opcontrol tick", "opcontrol");
     // Analog sticks
@@ -171,4 +234,3 @@ void opcontrol()
     }
     pros::delay(25);
   }*/
-}

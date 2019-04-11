@@ -16,20 +16,18 @@ void DrivetrainTurnController::controllerSet(double ivalue)
 void tuneAutoaim()
 {
   info("Starting to tune autoaim.", "tuneAutoaim");
-  std::shared_ptr<VisionZoomInputController> input = std::make_shared<VisionZoomInputController>(VisionZoomInputController(Flag::red));
-  std::shared_ptr<DrivetrainForwardController> output = std::make_shared<DrivetrainForwardController>(DrivetrainForwardController());
+  pros::lcd::print(0, "Tuning now! %s", "Zhangir loh");
+  std::shared_ptr<ADIGyro> input = std::make_shared<ADIGyro>(gyro);
+  std::shared_ptr<DrivetrainTurnController> output = std::make_shared<DrivetrainTurnController>(DrivetrainTurnController());
 
-  auto tuner = PIDTunerFactory::create(input,
-                                       output, 
-                                       2_s, 0, 760.0, 0.01, 0.0, 0.01, 0.0, 0.01, 30);
-  
-  auto values = tuner.autotune();
+  auto tuner = PIDTunerFactory::createPtr(input,
+                                          output,
+                                          2_s, 90.0, 0.0001, 0.05, 0.0001, 0.05, 0.0001, 0.05, 10);
+
+  okapi::PIDTuner::Output values = tuner->autotune();
   printf("Tuned: %f %f %f\n", values.kP, values.kI, values.kD);
+  pros::lcd::print(1, "Tuned %f %f %f", values.kP, values.kI, values.kD);
 
-  FILE* outputFile = fopen("pid_output.txt", "w");
-  fprintf(outputFile, "%f %f %f\n", values.kP, values.kI, values.kD);
-  fclose(outputFile);
-  
   info("Finished tuning.", "tuneAutoaim");
 }
 

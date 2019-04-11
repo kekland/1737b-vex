@@ -1,36 +1,44 @@
 #include "main.h"
 #include "vision_utils.h"
 
-void aimForFlag(Flag currentFlag) {
+void aimForFlag(Flag currentFlag)
+{
   info("Starting to aim for flag", "aimForFlag");
   okapi::AverageFilter<3> filter;
-  
+
   flagAimingController->reset();
   flagAimingController->setTarget(0.0);
 
   int iters = 0;
-  while(true) {
-    if(flagAimingController->isSettled()) {
+  while (true)
+  {
+    if (flagAimingController->isSettled())
+    {
       break;
     }
     pros::delay(25);
     auto flag = getFlagForShooting(currentFlag);
-    
+
     if (flag == NULL)
     {
       warn("Flag was NULL.", "aimForFlag");
       continue;
     }
-    
 
     double position = (double)flag->x_middle_coord;
-    position += (flag->signature == (int)Flag::red)? 8.0 : -8.0;
     double filteredPosition = filter.filter(position);
 
-    if(iters < 3) filteredPosition = position;
+    if (iters < 3)
+      filteredPosition = position;
 
-    
     double power = flagAimingController->step(filteredPosition);
+
+    double error = flagAimingController->getError();
+    if (abs(error) <= 5 && iters > 5)
+    {
+      break;
+    }
+
     drivetrain->tank(-power, power);
     iters++;
 
@@ -44,7 +52,8 @@ void aimForFlag(Flag currentFlag) {
 
 const double zoomForFlagTargetClose = 26.0;
 const double zoomForFlagTargetFar = 8.0;
-void zoomForFlag(Flag currentFlag) {
+void zoomForFlag(Flag currentFlag)
+{
   info("Starting to zoom for flag", "zoomForFlag");
   okapi::AverageFilter<3> filter;
 
@@ -68,12 +77,14 @@ void zoomForFlag(Flag currentFlag) {
 
     double filteredWidth = filter.filter(width);
     double error = flagZoomingController->getError();
-    
-    if(abs(error) == 0 && iters > 20) {
+
+    if (abs(error) == 0 && iters > 4)
+    {
       break;
     }
 
-    if(iters < 3) filteredWidth = width;
+    if (iters < 3)
+      filteredWidth = width;
     double power = flagZoomingController->step(filteredWidth);
 
     drivetrain->tank(power, power);
@@ -81,7 +92,7 @@ void zoomForFlag(Flag currentFlag) {
 
     printf("(%f) %f -> %f with power %f\n", width, filteredWidth, zoomForFlagTargetClose, power);
   }
-  
+
   drivetrain->tank(0.0, 0.0);
   pros::delay(50);
   info("Finished zooming for flag", "zoomForFlag");

@@ -6,6 +6,7 @@
 
 extern std::shared_ptr<okapi::IterativePosPIDController> leftDriveController;
 extern std::shared_ptr<okapi::IterativePosPIDController> rightDriveController;
+extern std::shared_ptr<okapi::IterativePosPIDController> straightDriveController;
 extern std::shared_ptr<okapi::IterativePosPIDController> turnController;
 
 extern std::shared_ptr<okapi::IterativePosPIDController> flagAimingController;

@@ -18,6 +18,7 @@ void initialize() {
 	configure();
 
 	info("Finished initialization.", "initialize");
+	pros::lcd::initialize();
 }
 
 /**

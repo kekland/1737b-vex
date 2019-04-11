@@ -8,6 +8,7 @@ using namespace okapi;
 /* Do not change gains for those controllers - their gains are copied from above */
 std::shared_ptr<okapi::IterativePosPIDController> leftDriveController;
 std::shared_ptr<okapi::IterativePosPIDController> rightDriveController;
+std::shared_ptr<okapi::IterativePosPIDController> straightDriveController;
 
 std::shared_ptr<okapi::IterativePosPIDController> turnController;
 
@@ -22,20 +23,20 @@ void configure_pid()
 {
   info("Starting configuration", "config_pid");
 
-  const double drivingKp = 0.0025;
-  const double drivingKi = 0.001;
-  const double drivingKd = 0.00013;
+  const double drivingKp = 0.001840;
+  const double drivingKi = -0.000070;
+  const double drivingKd = -0.000230;
 
   leftDriveController = std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.0, 0.0, 0.0, 0.0));
   rightDriveController = std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.0, 0.0, 0.0, 0.0));
-
+  straightDriveController = std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.000, 0.0, 0.0));
   turnController =
-      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.0128, 0.001, 0.00018, 0.0));
+      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.010000, 0.002080, 0.000020));
 
   flagAimingController =
-      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.003, 0.025, 0.0001));
+      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.003, 0.008, 0.0001));
   flagZoomingController =
-      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.119, 0.01, 0.0001));
+      std::make_shared<okapi::IterativePosPIDController>(IterativeControllerFactory::posPID(0.119, 0.01, 0.00001));
 
   // Set gains
   leftDriveController->setGains(drivingKp, drivingKi, drivingKd);
