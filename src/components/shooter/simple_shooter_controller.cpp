@@ -10,7 +10,7 @@ void SimpleShooterController::shootOnce()
 {
   motor->tarePosition();
   control(ShooterState::shoot);
-  pros::delay(600);
+  pros::delay(550);
   control(ShooterState::stop);
   motor->tarePosition();
 }
@@ -38,8 +38,4 @@ void SimpleShooterController::shootTwice()
   shootOnce();
   
   opcontrolState->intakeEnabled = true;
-}
-
-void SimpleShooterController::shootTwiceTask(void* params) {
-  
 }

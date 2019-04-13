@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include "./components/screen/screen.h"
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -18,6 +18,7 @@ void initialize() {
 	configure();
 
 	info("Finished initialization.", "initialize");
+	// screenInit();
 	pros::lcd::initialize();
 }
 

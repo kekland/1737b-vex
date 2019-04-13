@@ -14,6 +14,7 @@
 #include "./logger/logger.h"
 #include "./config/config.h"
 #include "./opcontrol/opcontrol_state.h"
+#include "./opcontrol/opcontrol_extended.h"
 
 
 

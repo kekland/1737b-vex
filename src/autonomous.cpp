@@ -37,13 +37,6 @@ void shootTwice(void *param)
   intakeController->control(IntakeDirection::up);
 }
 
-void skillsRun() {
-  double turnMultiplier = -1.0;
-  matchRun(turnMultiplier);
-  turn(90_deg, turnMultiplier);
-  drive(-2.9_ft);
-}
-
 void matchRun(double turnMultiplier) {
   shooterAngleController->control(ShooterAngle::upFlag);
 
@@ -53,38 +46,47 @@ void matchRun(double turnMultiplier) {
   driveRight->moveVoltage(-2000);
   pros::delay(225);
   intakeController->control(IntakeDirection::stop);
-  drive(-3.60_ft);
+  drive(-3.65_ft);
   intakeController->control(IntakeDirection::down);
   pros::delay(150);
   intakeController->control(IntakeDirection::stop);
   turn(90.0_deg, turnMultiplier);
-  aimForFlag(Flag::blue);
+  aimForFlag((turnMultiplier == 1.0)? Flag::red : Flag::blue);
 
   shooterController->shootTwice();
   
   intakeController->control(IntakeDirection::up);
-  turn(6.0_deg, turnMultiplier);
-  driveLeft->moveVoltage(12000);
-  driveRight->moveVoltage(12000);
+  //turn(6.0_deg, turnMultiplier);
+  driveLeft->moveVoltage((turnMultiplier == 1.0)? 12000 : 10250);
+  driveRight->moveVoltage((turnMultiplier == 1.0)? 11500 : 12000);
   pros::delay(1000);
-  driveLeft->moveVoltage(10000);
-  driveRight->moveVoltage(10000);
-  pros::delay(500);
+  driveLeft->moveVoltage((turnMultiplier == 1.0)? 7000 : 9000);
+  driveRight->moveVoltage((turnMultiplier == 1.0)? 9000 : 7000);
+  pros::delay(950);
   driveLeft->moveVoltage(0);
   driveRight->moveVoltage(0);
 
-  drive(-4.2_ft);
-  intakeController->control(IntakeDirection::down);
+  drive(-4.65_ft);
+  intake->moveVelocity(-100);
+  //intakeController->control(IntakeDirection::down);
   turn(-42.0_deg, turnMultiplier);
   pros::Task(shootOnce, NULL);
   drive(3.85_ft);
   turn(48.5_deg, turnMultiplier);
-  drive(-6.25_ft);
+  drive(-6.115_ft);
 }
+
+void skillsRun() {
+  double turnMultiplier = -1.0;
+  matchRun(turnMultiplier);
+  turn(90_deg, turnMultiplier);
+  drive(-2.9_ft);
+}
+
 void autonomous()
 {
   info("Autonomous start", "autonomous");
   gameState->autonStarted();
-  matchRun(-1.0);
+  matchRun(1.0);
   //skillsRun();
 }

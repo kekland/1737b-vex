@@ -7,13 +7,11 @@
 class SimpleShooterController : public BaseShooterController
 {
 public:
-  SimpleShooterController(okapi::Motor& motor): BaseShooterController(motor) {};
+  SimpleShooterController(okapi::Motor& motor): BaseShooterController(motor) {}
   void control(ShooterState state) override;
 
   void shootOnce() override;
-
   void shootTwice() override;
-  void shootTwiceTask(void *param) override;
 };
 
 #endif

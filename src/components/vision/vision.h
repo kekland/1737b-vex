@@ -5,5 +5,6 @@
 #include "main.h"
 
 void shootTwiceAutomated(Flag currentFlag);
-void shootTwiceTask(void* param);
+void shootTwiceAutomatedTask(void* param);
+void measureAreaOfObjects();
 #endif

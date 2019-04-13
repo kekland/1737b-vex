@@ -46,8 +46,8 @@ void configure_pid()
   leftDriveController->setOutputLimits(1.0, -1.0);
   rightDriveController->setOutputLimits(1.0, -1.0);
   turnController->setOutputLimits(1.0, -1.0);
-  flagAimingController->setOutputLimits(0.25, -0.25);
-  flagZoomingController->setOutputLimits(0.45, -0.45);
+  flagAimingController->setOutputLimits(0.5, -0.5);
+  flagZoomingController->setOutputLimits(0.5, -0.5);
 
   info("Finished configuration", "config_pid");
 }

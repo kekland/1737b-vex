@@ -16,28 +16,43 @@ using namespace okapi;
  * task, not resume it from where it left off.
  */
 
+void testTask(void *args)
+{
+  while (true)
+  {
+    info("I am running!", "testTask");
+    pros::delay(100);
+  }
+}
+
 void controlShooterAngle()
 {
   if (masterController->getDigital(ControllerDigital::up))
   {
-    shooterAngleController->control(ShooterAngle::upFlag);
+    shooterAngleController->control(ShooterAngle::downFlag);
   }
   else if (masterController->getDigital(ControllerDigital::down))
   {
-    shooterAngleController->control(ShooterAngle::downFlag);
+    shooterAngleController->control(ShooterAngle::upFlag);
   }
 }
 
 void controlShooter()
 {
-  if (masterController->getDigital(ControllerDigital::R2))
+  if (masterController->getDigital(ControllerDigital::A))
   {
-    shooterController->control(ShooterState::shoot);
+    shooterController->shootOnce();
+    //shooterController->control(ShooterState::shoot);
   }
   else if (masterController->getDigital(ControllerDigital::R1))
   {
+    //opcontrolState->addTask(testTask, NULL);
     Flag flag = gameState->getOpposingFlag();
-    opcontrolState->addTask(shootTwiceTask, &flag);
+    opcontrolState->addTask(shootTwiceAutomatedTask, &flag);
+  }
+  else if (masterController->getDigital(ControllerDigital::R2))
+  {
+    opcontrolState->addTask(shootTwiceTask, NULL);
   }
   else
   {
@@ -63,136 +78,19 @@ void controlIntake()
 
 void opcontrol()
 {
-  if (TUNING_PID)
-  {
-    warn("Detected that we are tuning PID now. Don't forget to turn this off.", "opcontrol");
-    info("Waiting for R2 button press", "opcontrol.");
-    while (true)
-    {
-      if (masterController->getDigital(ControllerDigital::R2))
-      {
-        tune();
-        return;
-      }
-    }
-    return;
-  }
-
   info("Opcontrol start.", "opcontrol");
   bool rumbled = false;
   gameState->driverStarted();
-
-  double kp = 0.002270;
-  double ki = 0.000030;
-  double kd = 0.000090;
+  
+  
+  //TODO: Don't forget to remove this
+  measureAreaOfObjects();
+  
+  //tune();
   while (true)
   {
-    /*drivetrain->tank(masterController->getAnalog(ControllerAnalog::leftY),
-                     masterController->getAnalog(ControllerAnalog::rightY));
-
-    if (masterController->getDigital(ControllerDigital::L1))
-    {
-      kp += 0.00001;
-    }
-    else if (masterController->getDigital(ControllerDigital::L2))
-    {
-      kp -= 0.00001;
-    }
-
-    if (masterController->getDigital(ControllerDigital::R1))
-    {
-      ki += 0.00001;
-    }
-    else if (masterController->getDigital(ControllerDigital::R2))
-    {
-      ki -= 0.00001;
-    }
-
-    if (masterController->getDigital(ControllerDigital::up))
-    {
-      kd += 0.00001;
-    }
-    else if (masterController->getDigital(ControllerDigital::down))
-    {
-      kd -= 0.00001;
-    }
-
-    if (masterController->getDigital(ControllerDigital::X))
-    {
-      gyro.reset();
-    }
-
-    pros::lcd::print(0, "%f %f %f", kp, ki, kd);
-    pros::lcd::print(1, "%f", gyro.get() / 10.0);
-    leftDriveController->setGains(kp, ki, kd);
-    rightDriveController->setGains(kp, ki, kd);
-
-    if (masterController->getDigital(ControllerDigital::B))
-    {
-      turn(90.0_deg, 1.0);
-    }
-    if (masterController->getDigital(ControllerDigital::A))
-    {
-      drive(5_ft);
-    }
-    if (masterController->getDigital(ControllerDigital::Y))
-    {
-      drive(2_ft);
-    }
-
-    pros::delay(20);
-
-    continue;*/
     // Analog sticks
-    if (opcontrolState->drivetrainEnabled)
-    {
-      drivetrain->tank(masterController->getAnalog(ControllerAnalog::leftY),
-                       masterController->getAnalog(ControllerAnalog::rightY));
-    }
-    if (opcontrolState->shooterAngleEnabled)
-    {
-      controlShooterAngle();
-    }
-    if (opcontrolState->shooterEnabled)
-    {
-      controlShooter();
-    }
-    if (opcontrolState->intakeEnabled)
-    {
-      controlIntake();
-    }
-
-    if (masterController->getDigital(ControllerDigital::left))
-    {
-      shooterController->shootTwice();
-      //opcontrolState->killTask();
-    }
-
-    if (masterController->getDigital(ControllerDigital::B))
-    {
-      autonomous();
-    }
-
-    // Temporary
-    if (masterController->getDigital(ControllerDigital::right))
-    {
-      while (masterController->getDigital(ControllerDigital::right))
-      {
-        pros::delay(20);
-      }
-
-      Alliance alliance = gameState->getAlliance();
-      gameState->setAlliance(alliance == Alliance::red ? Alliance::blue : Alliance::red);
-      visionSensor.set_led((alliance == Alliance::red) ? 16711680 : 255);
-    }
-
-    pros::delay(25);
-  }
-}
-/*while (true)
-  {
-    info("Opcontrol tick", "opcontrol");
-    // Analog sticks
+    //printf("%f\n", shooter->getPosition());
     if (opcontrolState->drivetrainEnabled)
     {
       drivetrain->tank(masterController->getAnalog(ControllerAnalog::leftY),
@@ -216,6 +114,11 @@ void opcontrol()
       opcontrolState->killTask();
     }
 
+    if (masterController->getDigital(ControllerDigital::B))
+    {
+      autonomous();
+    }
+
     // Temporary
     if (masterController->getDigital(ControllerDigital::right))
     {
@@ -228,9 +131,12 @@ void opcontrol()
       gameState->setAlliance(alliance == Alliance::red ? Alliance::blue : Alliance::red);
     }
 
-    if (masterController->getDigital(ControllerDigital::left))
+    if (gameState->getTimeFromGameStartSeconds() > 105.0 && !rumbled)
     {
-      autonomous();
+      masterController->rumble("-.- ");
+      rumbled = true;
     }
+
     pros::delay(25);
-  }*/
+  }
+}

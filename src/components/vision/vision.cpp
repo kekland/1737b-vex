@@ -14,6 +14,34 @@ bool shouldShootMiddleFlag(Flag currentFlag)
   return checkFlag(middleFlag, currentFlag);
 }
 
+//Actual distance: 1m
+//Actual mid area: 1100
+//Actual high area: 
+// Now mid area: 726
+
+void measureAreaOfObjects()
+{
+  info("Measuring area.", "measureAreaOfObjects");
+  double area = 0.0;
+  int iters = 0;
+  while (true)
+  {
+    pros::delay(25);
+    auto topFlag = getTopFlag();
+    auto flag = getMiddleFlag();
+    if (flag == NULL || topFlag == NULL)
+    {
+      info("Flag is NULL", "maoo");
+      continue;
+    }
+
+    double area = topFlag->width * topFlag->height;
+
+    printf("top %d\t(%d %d) %d\n", topFlag->signature, topFlag->width, topFlag->height, topFlag->width * topFlag->height);
+    printf("mid %d\t(%d %d) %d\n", flag->signature, flag->width, flag->height, flag->width * flag->height);
+  }
+}
+
 void shootTwiceAutomated(Flag currentFlag)
 {
   info("Starting to shoot.", "shootTwiceAutomated");
@@ -53,7 +81,7 @@ void shootTwiceAutomated(Flag currentFlag)
     aimForFlag(currentFlag);
     info("Finished aiming and zooming", "shootTwiceAutomated");
 
-    shootTopFlag = shouldShootTopFlag(currentFlag);
+    /*shootTopFlag = shouldShootTopFlag(currentFlag);
     shootMiddleFlag = shouldShootMiddleFlag(currentFlag);
 
     if (shootTopFlag && shootMiddleFlag)
@@ -78,11 +106,11 @@ void shootTwiceAutomated(Flag currentFlag)
     else
     {
       warn("No flags were detected.", "shootTwiceAutomated");
-    }
+    }*/
   }
 }
 
-void shootTwiceTask(void *param)
+void shootTwiceAutomatedTask(void *param)
 {
   opcontrolState->drivetrainEnabled = false;
   opcontrolState->shooterAngleEnabled = false;
@@ -90,5 +118,6 @@ void shootTwiceTask(void *param)
 
   shootTwiceAutomated(gameState->getOpposingFlag());
 
+  masterController->rumble(". ");
   opcontrolState->gracefulEndTask();
 }

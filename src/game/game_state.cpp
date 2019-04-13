@@ -62,6 +62,7 @@ double GameState::getTimeFromGameStartSeconds() {
 
 void GameState::setAlliance(Alliance alliance) {
   selectedAlliance = alliance;
+  visionSensor.set_led((selectedAlliance == Alliance::red) ? 255 : 16711680);
 }
 
 void GameState::setAutonomous(int selection) {

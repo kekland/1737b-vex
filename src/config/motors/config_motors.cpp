@@ -39,6 +39,8 @@ void configure_motors() {
   intake = new okapi::Motor(11, true, AbstractMotor::gearset::green);
   shooter = new okapi::Motor(13, true, AbstractMotor::gearset::green);
   shooterAngle = new okapi::Motor(19, false, AbstractMotor::gearset::green);
+
+  shooterAngle->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   
   info("Finished configuration", "config_motors");
 }

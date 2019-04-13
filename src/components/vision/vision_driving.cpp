@@ -4,16 +4,15 @@
 void aimForFlag(Flag currentFlag)
 {
   info("Starting to aim for flag", "aimForFlag");
-  okapi::AverageFilter<3> filter;
 
   flagAimingController->reset();
   flagAimingController->setTarget(0.0);
 
   int iters = 0;
+  int startTime = pros::millis();
   while (true)
   {
-    if (flagAimingController->isSettled())
-    {
+    if(pros::millis() - startTime > 3000) {
       break;
     }
     pros::delay(25);
@@ -22,19 +21,16 @@ void aimForFlag(Flag currentFlag)
     if (flag == NULL)
     {
       warn("Flag was NULL.", "aimForFlag");
+      drivetrain->tank(0.0, 0.0);
       continue;
     }
 
     double position = (double)flag->x_middle_coord;
-    double filteredPosition = filter.filter(position);
 
-    if (iters < 3)
-      filteredPosition = position;
-
-    double power = flagAimingController->step(filteredPosition);
+    double power = flagAimingController->step(position);
 
     double error = flagAimingController->getError();
-    if (abs(error) <= 5 && iters > 5)
+    if (abs(error) <= 2 && iters > 5)
     {
       break;
     }
@@ -42,7 +38,7 @@ void aimForFlag(Flag currentFlag)
     drivetrain->tank(-power, power);
     iters++;
 
-    printf("(%f) %f -> %f with power %f\n", position, filteredPosition, 0.0, power);
+    printf("(%f) %f -> %f with power %f\n", position, position, 0.0, power);
   }
 
   drivetrain->tank(0.0, 0.0);
