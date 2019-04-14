@@ -2,20 +2,6 @@
 #include "./autonomous/autonomous_controller.h"
 using namespace okapi;
 
-/**
- * Runs the operator control code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
- *
- * If no competition control is connected, this function will run immediately
- * following initialize().
- *
- * If the robot is disabled or communications is lost, the
- * operator control task will be stopped. Re-enabling the robot will restart the
- * task, not resume it from where it left off.
- */
-
 void testTask(void *args)
 {
   while (true)
@@ -42,18 +28,14 @@ void controlShooter()
   if (masterController->getDigital(ControllerDigital::A))
   {
     shooterController->shootOnce();
-    //shooterController->control(ShooterState::shoot);
   }
   else if (masterController->getDigital(ControllerDigital::R1))
   {
-    //opcontrolState->addTask(testTask, NULL);
-    measureAreaOfObjects();
-    //Flag flag = gameState->getOpposingFlag();
-    //opcontrolState->addTask(shootTwiceAutomatedTask, &flag);
+    opcontrolState->addTask(aimAndZoomAutomatedTask);
   }
   else if (masterController->getDigital(ControllerDigital::R2))
   {
-    opcontrolState->addTask(shootTwiceTask, NULL);
+    opcontrolState->addTask(shootTwiceAutomatedTask);
   }
   else
   {
@@ -77,21 +59,13 @@ void controlIntake()
   }
 }
 
-void opcontrol()
+void control()
 {
-  info("Opcontrol start.", "opcontrol");
   bool rumbled = false;
   gameState->driverStarted();
-  
-  
-  //TODO: Don't forget to remove this
-  //measureAreaOfObjects();
-  
-  //tune();
   while (true)
   {
     // Analog sticks
-    //printf("%f\n", shooter->getPosition());
     if (opcontrolState->drivetrainEnabled)
     {
       drivetrain->tank(masterController->getAnalog(ControllerAnalog::leftY),
@@ -140,4 +114,11 @@ void opcontrol()
 
     pros::delay(25);
   }
+}
+
+void opcontrol()
+{
+  info("Opcontrol start.", "opcontrol");
+  //tune();
+  control();
 }

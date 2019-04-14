@@ -4,7 +4,9 @@
 
 #include "main.h"
 
+void aimAndZoomAutomated(Flag currentFlag);
 void shootTwiceAutomated(Flag currentFlag);
+
 void shootTwiceAutomatedTask(void* param);
-void measureAreaOfObjects();
+void aimAndZoomAutomatedTask(void* param);
 #endif

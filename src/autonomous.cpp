@@ -2,7 +2,7 @@
 #include "./autonomous/autonomous_controller.h"
 #include "./autonomous/autonomous_variants.h"
 #include "./components/vision/vision_driving.h"
-#include "./pidautotuner/pidautotuner.h"
+
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -37,7 +37,10 @@ void shootTwice(void *param)
   intakeController->control(IntakeDirection::up);
 }
 
-void matchRun(double turnMultiplier) {
+void matchRun(Alliance alliance) {
+  double turnMultiplier = (alliance == Alliance::red)? -1.0 : 1.0;
+  Flag flagToShoot = (alliance == Alliance::red)? Flag::blue : Flag::red;
+
   shooterAngleController->control(ShooterAngle::upFlag);
 
   intakeController->control(IntakeDirection::up);
@@ -51,17 +54,17 @@ void matchRun(double turnMultiplier) {
   pros::delay(150);
   intakeController->control(IntakeDirection::stop);
   turn(90.0_deg, turnMultiplier);
-  aimForFlag((turnMultiplier == 1.0)? Flag::red : Flag::blue);
+  aimAndZoomAutomated(flagToShoot);
 
   shooterController->shootTwice();
   
   intakeController->control(IntakeDirection::up);
   //turn(6.0_deg, turnMultiplier);
-  driveLeft->moveVoltage((turnMultiplier == 1.0)? 12000 : 10250);
-  driveRight->moveVoltage((turnMultiplier == 1.0)? 11500 : 12000);
+  driveLeft->moveVoltage((alliance == Alliance::blue)? 12000 : 10250);
+  driveRight->moveVoltage((alliance == Alliance::blue)? 11500 : 12000);
   pros::delay(1000);
-  driveLeft->moveVoltage((turnMultiplier == 1.0)? 7000 : 9000);
-  driveRight->moveVoltage((turnMultiplier == 1.0)? 9000 : 7000);
+  driveLeft->moveVoltage((alliance == Alliance::blue)? 7000 : 9000);
+  driveRight->moveVoltage((alliance == Alliance::blue)? 9000 : 7000);
   pros::delay(950);
   driveLeft->moveVoltage(0);
   driveRight->moveVoltage(0);
@@ -77,9 +80,8 @@ void matchRun(double turnMultiplier) {
 }
 
 void skillsRun() {
-  double turnMultiplier = -1.0;
-  matchRun(turnMultiplier);
-  turn(90_deg, turnMultiplier);
+  matchRun(Alliance::red);
+  turn(-90_deg);
   drive(-2.9_ft);
 }
 
@@ -87,6 +89,6 @@ void autonomous()
 {
   info("Autonomous start", "autonomous");
   gameState->autonStarted();
-  matchRun(1.0);
+  matchRun(Alliance::red);
   //skillsRun();
 }
