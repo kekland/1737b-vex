@@ -2,6 +2,8 @@
 #include "vision_utils.h"
 #include "vision_driving.h"
 #include "../../autonomous/autonomous_controller.h"
+#include "./calc/vision_math.h"
+
 using namespace okapi;
 bool shouldShootTopFlag(Flag currentFlag)
 {
@@ -19,7 +21,29 @@ void shootTwiceAutomated(Flag currentFlag)
 {
   info("Starting to shoot.", "shootTwiceAutomated");
 
-  bool shootTopFlag = shouldShootTopFlag(currentFlag);
+  FlagObject object = pollForFlag(currentFlag);
+  if (object.flagPointer == NULL)
+  {
+    warn("No flags found.", "shootTwiceAutomated");
+    return;
+  }
+
+  QLength distance = calculateDistanceToFlag(object.flagPointer, object.isTopFlag);
+  QLength verticalDistance = calculateVerticalDistanceToFlag(object.flagPointer);
+  QLength horizontalError = calculateHorizontalErrorFromFlag(object.flagPointer);
+
+  QLength flatDistance = calculateFlatDistanceToFlag(verticalDistance, distance);
+
+  QAngle angle = calculateHorizontalAngle(horizontalError, flatDistance);
+
+  printf("[shootTwiceAutomated] error: (%fm, %fm), distance: %fm, flat: %fm, angle: %fdeg",
+         horizontalError.convert(meter), verticalDistance.convert(meter),
+         distance.convert(meter), flatDistance.convert(meter), angle.convert(degree));
+
+  info("Starting to turn", "shootTwiceAutomated");
+  turn(angle, 1.0);
+
+  /*bool shootTopFlag = shouldShootTopFlag(currentFlag);
   bool shootMiddleFlag = shouldShootMiddleFlag(currentFlag);
   bool shootAny = shootTopFlag || shootMiddleFlag;
 
@@ -41,20 +65,11 @@ void shootTwiceAutomated(Flag currentFlag)
   }
 
   aimForFlag(currentFlag);
+  zoomForFlag(currentFlag);
+  aimForFlag(currentFlag);
+  info("Finished aiming and zooming", "shootTwiceAutomated");
 
-  pros::vision_object_s_t *flagToShoot = NULL;
-  while (flagToShoot == NULL)
-  {
-    flagToShoot = getFlagForShooting(currentFlag);
-  }
-
-  if (flagToShoot->width > 18)
-  {
-    zoomForFlag(currentFlag);
-    aimForFlag(currentFlag);
-    info("Finished aiming and zooming", "shootTwiceAutomated");
-
-    /*shootTopFlag = shouldShootTopFlag(currentFlag);
+  shootTopFlag = shouldShootTopFlag(currentFlag);
     shootMiddleFlag = shouldShootMiddleFlag(currentFlag);
 
     if (shootTopFlag && shootMiddleFlag)
@@ -80,7 +95,6 @@ void shootTwiceAutomated(Flag currentFlag)
     {
       warn("No flags were detected.", "shootTwiceAutomated");
     }*/
-  }
 }
 
 void shootTwiceAutomatedTask(void *param)

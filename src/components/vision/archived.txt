@@ -308,3 +308,53 @@ void shootTwiceAutomated(int current_flag)
     pros::delay(100);
   }
 }
+//Actual distance: 1m
+//Actual mid area: 1100
+//Actual high area:
+// Now mid area: 726
+
+void measureAreaOfObjects()
+{
+  //info("Measuring area.", "measureAreaOfObjects");
+  double midArea = 0.0;
+  double midDx = 0.0;
+  double midWidth = 0.0;
+  int iters = 0;
+  double cosine = 0.965;
+  while (iters < 1)
+  {
+    pros::delay(25);
+    auto topFlag = getTopFlag();
+    auto flag = getMiddleFlag();
+    if (!shouldShootMiddleFlag(Flag::blue))
+    {
+      info("Flag is NULL", "maoo");
+      continue;
+    }
+
+    double area = flag->width * flag->height;
+    midArea += area;
+    midDx += flag->x_middle_coord;
+    midWidth += flag->width;
+    iters++;
+
+    //printf("top %d\t(%d %d) %d\n", topFlag->signature, topFlag->width, topFlag->height, topFlag->width * topFlag->height);
+    //printf("mid %d\t(%d %d) %d\n", flag->signature, flag->width, flag->height, flag->width * flag->height);
+  }
+
+  midArea /= iters;
+  midDx /= iters;
+  midWidth /= iters;
+  double dx = (midDx / midWidth) * 0.132;
+  double w = (midWidth)*0.132;
+
+  double distance = sqrt(1100.0 / midArea);
+  double xdistance = (distance)*cosine;
+
+  double theta = atan(dx / xdistance);
+  theta *= 57.295779513;
+  pros::delay(25);
+  turn(theta * degree, 1.0);
+
+  printf("top | mid area %fm2, distance: %fm, dx: %fm, width: %fm, theta: %f\n", midArea, distance, dx, w, theta);
+}

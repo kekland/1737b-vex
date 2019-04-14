@@ -18,14 +18,14 @@ void aimForFlag(Flag currentFlag)
     pros::delay(25);
     auto flag = getFlagForShooting(currentFlag);
 
-    if (flag == NULL)
+    if (flag.flagPointer == NULL)
     {
       warn("Flag was NULL.", "aimForFlag");
       drivetrain->tank(0.0, 0.0);
       continue;
     }
 
-    double position = (double)flag->x_middle_coord;
+    double position = (double)flag.flagPointer->x_middle_coord;
 
     double power = flagAimingController->step(position);
 
@@ -62,14 +62,14 @@ void zoomForFlag(Flag currentFlag)
     // Get the flag
     auto flag = getFlagForShooting(currentFlag);
 
-    if (flag == NULL)
+    if (flag.flagPointer == NULL)
     {
       warn("Flag was NULL.", "zoomForFlag");
       continue;
     }
 
-    double width = (double)flag->width;
-    double height = (double)flag->height;
+    double width = (double)flag.flagPointer->width;
+    double height = (double)flag.flagPointer->height;
 
     double filteredWidth = filter.filter(width);
     double error = flagZoomingController->getError();

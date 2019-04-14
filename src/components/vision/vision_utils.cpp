@@ -98,7 +98,7 @@ bool checkFlag(pros::vision_object_s_t *flag, Flag currentFlag)
   return false;
 }
 
-pros::vision_object_s_t *getFlagForShooting(Flag currentFlag)
+FlagObject getFlagForShooting(Flag currentFlag)
 {
   auto highFlag = getTopFlag();
   auto middleFlag = getMiddleFlag();
@@ -106,17 +106,43 @@ pros::vision_object_s_t *getFlagForShooting(Flag currentFlag)
   bool shouldShootHighFlag = checkFlag(highFlag, currentFlag);
   bool shouldShootMiddleFlag = checkFlag(middleFlag, currentFlag);
 
+  FlagObject flag;
   if (shouldShootHighFlag && shouldShootMiddleFlag)
   {
-    return (highFlag->width > middleFlag->width)? highFlag : middleFlag;
+    flag.flagPointer = (highFlag->width > middleFlag->width)? highFlag : middleFlag;
+    flag.isTopFlag = (highFlag->width > middleFlag->width)? highFlag : middleFlag;
   }
   else if(shouldShootHighFlag) {
-    return highFlag;
+    flag.flagPointer = highFlag;
+    flag.isTopFlag = true;
   }
   else if (shouldShootMiddleFlag)
   {
-    return middleFlag;
+    flag.flagPointer = middleFlag;
+    flag.isTopFlag = false;
+  }
+  else {
+    flag.flagPointer = NULL;
+    flag.isTopFlag = false;
   }
 
-  return NULL;
+  return flag;
+}
+
+FlagObject pollForFlag(Flag currentFlag) {
+  int startTime = pros::millis();
+
+  FlagObject flag;
+
+  while(pros::millis() - startTime < 100) {
+    flag = getFlagForShooting(currentFlag);
+
+    if(flag.flagPointer != NULL) {
+      break;
+    }
+
+    pros::delay(25);
+  }
+
+  return flag;
 }

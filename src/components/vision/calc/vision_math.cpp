@@ -1,5 +1,7 @@
 #include "main.h"
 
+using namespace okapi;
+
 const QLength flagWidth = 13.2_mm;
 const QLength flagHeight = 13.2_mm;
 

@@ -9,6 +9,7 @@ pros::vision_object_s_t* getTopFlag();
 pros::vision_object_s_t* getMiddleFlag();
 
 bool checkFlag(pros::vision_object_s_t* flag, Flag currentFlag);
-pros::vision_object_s_t* getFlagForShooting(Flag currentFlag);
+FlagObject getFlagForShooting(Flag currentFlag);
+FlagObject pollForFlag(Flag currentFlag);
 
 #endif

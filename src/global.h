@@ -9,7 +9,7 @@
 #include "./components/shooterAngle/shooterAngle.h"
 #include "./components/shooter/shooter.h"
 #include "./components/vision/vision.h"
-#include "./components/vision/vision_controller.h"
+#include "./components/vision/calc/flag_object.h"
 
 #include "./logger/logger.h"
 #include "./config/config.h"
