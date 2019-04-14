@@ -47,8 +47,9 @@ void controlShooter()
   else if (masterController->getDigital(ControllerDigital::R1))
   {
     //opcontrolState->addTask(testTask, NULL);
-    Flag flag = gameState->getOpposingFlag();
-    opcontrolState->addTask(shootTwiceAutomatedTask, &flag);
+    measureAreaOfObjects();
+    //Flag flag = gameState->getOpposingFlag();
+    //opcontrolState->addTask(shootTwiceAutomatedTask, &flag);
   }
   else if (masterController->getDigital(ControllerDigital::R2))
   {
@@ -84,7 +85,7 @@ void opcontrol()
   
   
   //TODO: Don't forget to remove this
-  measureAreaOfObjects();
+  //measureAreaOfObjects();
   
   //tune();
   while (true)

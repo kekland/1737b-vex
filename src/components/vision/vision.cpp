@@ -1,7 +1,8 @@
 #include "main.h"
 #include "vision_utils.h"
 #include "vision_driving.h"
-
+#include "../../autonomous/autonomous_controller.h"
+using namespace okapi;
 bool shouldShootTopFlag(Flag currentFlag)
 {
   auto topFlag = getTopFlag();
@@ -12,34 +13,6 @@ bool shouldShootMiddleFlag(Flag currentFlag)
 {
   auto middleFlag = getMiddleFlag();
   return checkFlag(middleFlag, currentFlag);
-}
-
-//Actual distance: 1m
-//Actual mid area: 1100
-//Actual high area: 
-// Now mid area: 726
-
-void measureAreaOfObjects()
-{
-  info("Measuring area.", "measureAreaOfObjects");
-  double area = 0.0;
-  int iters = 0;
-  while (true)
-  {
-    pros::delay(25);
-    auto topFlag = getTopFlag();
-    auto flag = getMiddleFlag();
-    if (flag == NULL || topFlag == NULL)
-    {
-      info("Flag is NULL", "maoo");
-      continue;
-    }
-
-    double area = topFlag->width * topFlag->height;
-
-    printf("top %d\t(%d %d) %d\n", topFlag->signature, topFlag->width, topFlag->height, topFlag->width * topFlag->height);
-    printf("mid %d\t(%d %d) %d\n", flag->signature, flag->width, flag->height, flag->width * flag->height);
-  }
 }
 
 void shootTwiceAutomated(Flag currentFlag)
