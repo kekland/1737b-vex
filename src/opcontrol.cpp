@@ -31,7 +31,7 @@ void controlShooter()
   }
   else if (masterController->getDigital(ControllerDigital::R1))
   {
-    opcontrolState->addTask(aimAndZoomAutomatedTask);
+    opcontrolState->addTask(aimAndZoom2AutomatedTask);
   }
   else if (masterController->getDigital(ControllerDigital::R2))
   {
@@ -69,7 +69,7 @@ void control()
     if (opcontrolState->drivetrainEnabled)
     {
       drivetrain->tank(masterController->getAnalog(ControllerAnalog::leftY),
-                       masterController->getAnalog(ControllerAnalog::rightY));
+                       masterController->getAnalog(ControllerAnalog::rightY), 0.09);
     }
     if (opcontrolState->shooterAngleEnabled)
     {
@@ -92,6 +92,19 @@ void control()
     if (masterController->getDigital(ControllerDigital::B))
     {
       autonomous();
+    }
+    if (masterController->getDigital(ControllerDigital::Y))
+    {
+      /*intakeController->control(IntakeDirection::up);
+      driveLeft->moveVelocity(200.0);
+      driveRight->moveVelocity(200.0);
+      pros::delay(350);
+      driveLeft->moveVelocity(-200.0);
+      driveRight->moveVelocity(-200.0);
+      pros::delay(500);
+      //drive(-2_ft);*/
+
+      intakeController->getBallUntilBallIsInIntake(NULL);
     }
 
     // Temporary

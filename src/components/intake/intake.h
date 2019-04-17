@@ -15,7 +15,9 @@ public:
   BaseIntakeController(const okapi::Motor& intakeMotor, double maxVel);
   void setMaxVelocity(double);
   double getMaxVelocity();
+  void getBallUntilBallIsInIntake(void* params);
   virtual void control(IntakeDirection direction) = 0;
+  virtual bool isBallInIntake() = 0;
 
 protected:
   double maxVelocity = 200.0;

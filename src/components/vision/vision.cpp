@@ -17,7 +17,8 @@ bool shouldShootMiddleFlag(Flag currentFlag)
   return checkFlag(middleFlag, currentFlag);
 }
 
-const QLength perfectDistanceFromFlag = 120.0_cm;
+const QLength perfectDistanceFromFlagMid = 125.0_cm;
+const QLength perfectDistanceFromFlagTop = 180.0_cm;
 void aimAndZoomAutomated(Flag currentFlag)
 {
   info("Starting to shoot.", "aimAndZoomAutomated");
@@ -37,15 +38,45 @@ void aimAndZoomAutomated(Flag currentFlag)
 
   QAngle angle = calculateHorizontalAngle(horizontalError, flatDistance);
 
-  printf("[aimAndZoomAutomated] error: (%fm, %fm), distance: %fm, flat: %fm, angle: %fdeg",
-         horizontalError.convert(meter), verticalDistance.convert(meter),
+  if(distance > 2_m) {
+    return;
+  }
+  printf("[aimAndZoomAutomated] top: %d, error: (%fm, %fm), distance: %fm, flat: %fm, angle: %fdeg\n",
+         object.isTopFlag, horizontalError.convert(meter), verticalDistance.convert(meter),
          distance.convert(meter), flatDistance.convert(meter), angle.convert(degree));
 
+  bool isBlueFlag = (object.flagPointer->signature == (int)Flag::blue);
   info("Starting to turn", "aimAndZoomAutomated");
-  turn(angle, 1.0);
+  QAngle anglePart = angle * 0.1;
+  turn(angle + ((anglePart) * ((isBlueFlag)? -1 : 1)), 1.0);
+  printf("%fdeg\n", angle.convert(degree));
 
   info("Starting to drive", "aimAndZoomAutomated");
-  drive(flatDistance - perfectDistanceFromFlag);
+  //drive(distance - 128.0_cm);
+  printf("%fcm\n", (distance - 128.0_cm).convert(centimeter));
+  
+
+  //opcontrolState->shooterAngleEnabled = false;
+  //opcontrolState->shooterEnabled = false;
+  //shootTwiceAutomated(currentFlag);
+}
+
+void aimAndZoom2Automated(Flag currentFlag) {
+  info("Starting to shoot.", "aimAndZoomAutomated");
+
+  FlagObject object = pollForFlag(currentFlag);
+  if (object.flagPointer == NULL)
+  {
+    warn("No flags found.", "aimAndZoomAutomated");
+    return;
+  }
+
+  aimForFlag(currentFlag);
+  zoomForFlag(currentFlag);
+
+  opcontrolState->shooterAngleEnabled = false;
+  opcontrolState->shooterEnabled = false;
+  shootTwiceAutomated(currentFlag);
 }
 
 void shootTwiceAutomated(Flag currentFlag)
@@ -82,7 +113,17 @@ void aimAndZoomAutomatedTask(void *param)
 {
   opcontrolState->drivetrainEnabled = false;
 
-  shootTwiceAutomated(gameState->getOpposingFlag());
+  aimAndZoomAutomated(gameState->getOpposingFlag());
+
+  opcontrolState->gracefulEndTask();
+}
+
+
+void aimAndZoom2AutomatedTask(void *param)
+{
+  opcontrolState->drivetrainEnabled = false;
+
+  aimAndZoom2Automated(gameState->getOpposingFlag());
 
   opcontrolState->gracefulEndTask();
 }

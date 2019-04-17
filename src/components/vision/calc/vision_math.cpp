@@ -2,11 +2,13 @@
 
 using namespace okapi;
 
-const QLength flagWidth = 13.2_mm;
-const QLength flagHeight = 13.2_mm;
+const QLength flagWidth = 13.2_cm;
+const QLength flagHeight = 13.9_cm;
 
-const double areaTopFlagAtOneMeterInPixels = 1100;    //TODO: calculate this
+const double areaTopFlagAtOneMeterInPixels = 685;    //TODO: calculate this
+const double distanceTopFlag = 1.3;
 const double areaMiddleFlagAtOneMeterInPixels = 1100; //px
+const double distanceMidFlag = 1;
 
 const double cameraWidthInPixels = 640.0;
 const double cameraHeightInPixels = 400.0;
@@ -18,21 +20,25 @@ QLength calculateDistanceToFlag(pros::vision_object_s_t *flag, bool isTopFlag)
   double area = flag->width * flag->height;
 
   //Inverse square law.
-  QLength distance = sqrt(areaAtOneMeterInPixels / area) * meter;
+  QLength distance = sqrt(areaAtOneMeterInPixels / area) * meter * ((isTopFlag)? distanceTopFlag : distanceMidFlag);
   return distance;
 }
 
 QLength calculateVerticalDistanceToFlag(pros::vision_object_s_t *flag)
 {
-  double distanceFromBottomInPixels = flag->y_middle_coord + (cameraHeightInPixels / 2.0);
-  double distanceFromBottomInFlags = (distanceFromBottomInPixels / flag->height);
+  double distanceFromBottomInPixels = (double)flag->y_middle_coord;// + (cameraHeightInPixels / 2.0);
+  double distanceFromBottomInFlags = (distanceFromBottomInPixels / (double)flag->height);
+
+  printf("vert | %d / %d -> %f\n", flag->y_middle_coord, flag->height, distanceFromBottomInFlags);
 
   return distanceFromBottomInFlags * flagHeight;
 }
 
 QLength calculateHorizontalErrorFromFlag(pros::vision_object_s_t *flag) {
-  double errorInPixels = flag->x_middle_coord;
-  double errorInFlags = errorInPixels / flag->width;
+  double errorInPixels = (double)flag->x_middle_coord;
+  double errorInFlags = errorInPixels / (double)flag->width;
+
+  printf("horiz | %d / %d -> %f\n", flag->x_middle_coord, flag->width, errorInFlags);
 
   return errorInFlags * flagWidth;
 }
@@ -48,14 +54,16 @@ QAngle calculateVerticalAngle(QLength verticalDistance, QLength distance) {
 QLength calculateFlatDistanceToFlag(QLength verticalDistance, QLength distance)
 {
   // Calculating with angles - deprecated
-  // QAngle verticalAngle = calculateVerticalAngle(verticalDistance, distance);
-  // double verticalAngleInRadians = verticalAngle.convert(radian);
+  QAngle verticalAngle = calculateVerticalAngle(verticalDistance, distance);
+  double verticalAngleInRadians = verticalAngle.convert(radian);
 
   // Pythagoras
-  double verticalDistanceInMetersSquared = pow(verticalDistance.convert(meter), 2);
-  double distanceInMetersSquared = pow(distance.convert(meter), 2);
+  // double verticalDistanceInMetersSquared = pow(verticalDistance.convert(meter), 2);
+  // double distanceInMetersSquared = pow(distance.convert(meter), 2);
 
-  double flatDistanceInMeters = sqrt(distanceInMetersSquared - verticalDistanceInMetersSquared);
+  // printf("flat | %f %f\n", distanceInMetersSquared, verticalDistanceInMetersSquared);
+
+  double flatDistanceInMeters = cos(verticalAngleInRadians) * distance.convert(meter); // = sqrt(distanceInMetersSquared - verticalDistanceInMetersSquared);
   return flatDistanceInMeters * meter;
 }
 

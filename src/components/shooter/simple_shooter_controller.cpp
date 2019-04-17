@@ -17,7 +17,7 @@ void SimpleShooterController::shootOnce()
 
 void SimpleShooterController::shootTwice()
 {
-  // If current angle is up - shoot up then down. If current angle is down, do in reverse.
+  // If current angle is up - shoot up, then down. If current angle is down, do in reverse.
   ShooterAngle nextAngle = (shooterAngleController->currentAngle == ShooterAngle::downFlag) ? ShooterAngle::upFlag : ShooterAngle::downFlag;
 
   // Wait until angle is settled and shoot

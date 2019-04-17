@@ -9,4 +9,5 @@ void shootTwiceAutomated(Flag currentFlag);
 
 void shootTwiceAutomatedTask(void* param);
 void aimAndZoomAutomatedTask(void* param);
+void aimAndZoom2AutomatedTask(void *param);
 #endif

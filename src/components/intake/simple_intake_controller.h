@@ -7,7 +7,8 @@
 class SimpleIntakeController : public BaseIntakeController
 {
 public:
-  SimpleIntakeController(okapi::Motor& motor, double maxVel): BaseIntakeController(motor, maxVel) {};
+  SimpleIntakeController(okapi::Motor& motor, double maxVel): BaseIntakeController(motor, maxVel) {}
+  bool isBallInIntake() override;
   void control(IntakeDirection direction) override;
 };
 

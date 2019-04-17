@@ -24,7 +24,7 @@ void configure_controllers()
 
   _shooterAngleController = std::make_shared<okapi::AsyncPosIntegratedController>(
       okapi::AsyncControllerFactory::posIntegrated(*shooterAngle, 100));
-  shooterAngleController = new SimpleShooterAngleController(*_shooterAngleController, {15.0, 60.0});
+  shooterAngleController = new SimpleShooterAngleController(*_shooterAngleController, {15.0, 52.0});
 
   shooterController = new SimpleShooterController(*shooter);
 

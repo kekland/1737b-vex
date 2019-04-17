@@ -7,6 +7,8 @@
 extern pros::Vision visionSensor;
 extern okapi::ADIGyro gyro;
 extern okapi::ADIUltrasonic ultrasonic;
+extern pros::ADILineSensor intakeLineSensor;
+extern int lineSensorMid;
 
 void configure_sensors();
 

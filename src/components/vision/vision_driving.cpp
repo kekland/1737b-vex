@@ -30,7 +30,7 @@ void aimForFlag(Flag currentFlag)
     double power = flagAimingController->step(position);
 
     double error = flagAimingController->getError();
-    if (abs(error) <= 2 && iters > 5)
+    if (flagAimingController->isSettled())
     {
       break;
     }
@@ -71,7 +71,7 @@ void zoomForFlag(Flag currentFlag)
     double width = (double)flag.flagPointer->width;
     double height = (double)flag.flagPointer->height;
 
-    double filteredWidth = filter.filter(width);
+    double filteredWidth = width;
     double error = flagZoomingController->getError();
 
     if (abs(error) == 0 && iters > 4)

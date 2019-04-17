@@ -1,7 +1,7 @@
 #include "main.h"
 
 using namespace okapi;
-const QSpeed ballSpeed = 20.0_mps;
+const QSpeed ballSpeed = 6.1_mps;
 
 QAngle angleToHitCoordinates(QLength flatDistance, QLength verticalDistance) {
   double x = flatDistance.convert(meter);

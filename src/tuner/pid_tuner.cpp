@@ -6,9 +6,9 @@ using namespace okapi;
 
 void tune()
 {
-  double kp = 0.005730;
-  double ki = 0.016330;
-  double kd = 0.000040;
+  double kp = 0.119000;
+  double ki = 0.010000;
+  double kd = 0.000010;
   while (true)
   {
     drivetrain->tank(masterController->getAnalog(ControllerAnalog::leftY),
@@ -49,15 +49,12 @@ void tune()
 
     if (masterController->getDigital(ControllerDigital::X))
     {
-      
-    }
-    else {
-
+      shooterController->shootOnce();
     }
 
     pros::lcd::print(0, "%f %f %f", kp, ki, kd);
     pros::lcd::print(1, "%f", gyro.get() / 10.0);
-    flagAimingController->setGains(kp, ki, kd);
+    flagZoomingController->setGains(kp, ki, kd);
     //rightDriveController->setGains(kp, ki, kd);
 
     /*if (masterController->getDigital(ControllerDigital::B))
@@ -75,7 +72,7 @@ void tune()
 
     if (masterController->getDigital(ControllerDigital::B))
     {
-      aimForFlag(Flag::blue);
+      zoomForFlag(Flag::blue);
     }
 
     pros::delay(20);
