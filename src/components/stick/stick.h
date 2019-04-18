@@ -13,6 +13,7 @@ enum class StickState
   skills = 4,
   skillsUp = 5,
   floor = 6,
+  flag = 7,
 };
 
 class BaseStickController

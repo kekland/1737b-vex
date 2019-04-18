@@ -12,7 +12,7 @@ void aimForFlag(Flag currentFlag)
   int startTime = pros::millis();
   while (true)
   {
-    if(pros::millis() - startTime > 3000) {
+    if(pros::millis() - startTime > 1000) {
       break;
     }
     pros::delay(25);
@@ -74,7 +74,7 @@ void zoomForFlag(Flag currentFlag)
     double filteredWidth = width;
     double error = flagZoomingController->getError();
 
-    if (abs(error) == 0 && iters > 4)
+    if (abs(error) <= 2 && iters > 4)
     {
       break;
     }
