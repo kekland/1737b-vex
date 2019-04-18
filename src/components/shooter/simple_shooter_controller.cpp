@@ -18,14 +18,15 @@ void SimpleShooterController::shootOnce()
 void SimpleShooterController::shootTwice()
 {
   // If current angle is up - shoot up, then down. If current angle is down, do in reverse.
-  ShooterAngle nextAngle = (shooterAngleController->currentAngle == ShooterAngle::downFlag) ? ShooterAngle::upFlag : ShooterAngle::downFlag;
+  //ShooterAngle nextAngle = (shooterAngleController->currentAngle == ShooterAngle::downFlag) ? ShooterAngle::upFlag : ShooterAngle::downFlag;
 
+  shooterAngleController->control(ShooterAngle::upFlag);
   // Wait until angle is settled and shoot
   shooterAngleController->waitUntilSettled();
   shootOnce();
 
   // Set the angle beforehand and start intaking the ball
-  shooterAngleController->control(nextAngle);
+  shooterAngleController->control(ShooterAngle::downFlag);
 
   opcontrolState->intakeEnabled = false;
   intakeController->control(IntakeDirection::down);

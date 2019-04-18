@@ -2,6 +2,7 @@
 #include "../../components/intake/simple_intake_controller.h"
 #include "../../components/shooter/simple_shooter_controller.h"
 #include "../../components/shooterAngle/simple_shooter_angle_controller.h"
+#include "../../components/stick/simple_stick_controller.h"
 #include "../motors/config_motors.h"
 
 std::shared_ptr<okapi::ChassisControllerIntegrated> drivetrain;
@@ -11,6 +12,7 @@ BaseIntakeController *intakeController;
 std::shared_ptr<okapi::AsyncPosIntegratedController> _shooterAngleController;
 BaseShooterAngleController *shooterAngleController;
 SimpleShooterController *shooterController;
+BaseStickController* stickController;
 
 void configure_controllers()
 {
@@ -24,9 +26,10 @@ void configure_controllers()
 
   _shooterAngleController = std::make_shared<okapi::AsyncPosIntegratedController>(
       okapi::AsyncControllerFactory::posIntegrated(*shooterAngle, 100));
-  shooterAngleController = new SimpleShooterAngleController(*_shooterAngleController, {15.0, 52.0});
+  shooterAngleController = new SimpleShooterAngleController(*_shooterAngleController, {10.0, 52.0});
 
   shooterController = new SimpleShooterController(*shooter);
+  stickController = new SimpleStickController(*stick);
 
   drivetrain->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
 

@@ -8,7 +8,7 @@ void SimpleIntakeController::control(IntakeDirection direction)
 
 bool SimpleIntakeController::isBallInIntake() {
   int value = intakeLineSensor.get_value_calibrated();
-  int midThird = 10;
+  int midThird = 50;
   
   int diff = abs(lineSensorMid - value);
 

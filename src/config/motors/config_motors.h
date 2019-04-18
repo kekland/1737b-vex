@@ -18,6 +18,7 @@ extern okapi::MotorGroup* driveRight;
 extern okapi::Motor* intake;
 extern okapi::Motor* shooter;
 extern okapi::Motor* shooterAngle;
+extern okapi::Motor* stick;
 
 void configure_motors();
 #endif

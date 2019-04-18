@@ -35,7 +35,8 @@ void controlShooter()
   }
   else if (masterController->getDigital(ControllerDigital::R2))
   {
-    opcontrolState->addTask(shootTwiceAutomatedTask);
+    shooterController->shootTwice();
+    //opcontrolState->addTask(shootTwiceAutomatedTask);
   }
   else
   {
@@ -93,18 +94,18 @@ void control()
     {
       autonomous();
     }
-    if (masterController->getDigital(ControllerDigital::Y))
+    if (partnerController->getDigital(ControllerDigital::Y))
     {
-      /*intakeController->control(IntakeDirection::up);
-      driveLeft->moveVelocity(200.0);
-      driveRight->moveVelocity(200.0);
-      pros::delay(350);
-      driveLeft->moveVelocity(-200.0);
-      driveRight->moveVelocity(-200.0);
-      pros::delay(500);
-      //drive(-2_ft);*/
-
-      intakeController->getBallUntilBallIsInIntake(NULL);
+      stickController->control(StickState::zero);
+    }
+    else if(partnerController->getDigital(ControllerDigital::up)) {
+      stickController->control(StickState::descore);
+    }
+    else if(partnerController->getDigital(ControllerDigital::down)) {
+      stickController->control(StickState::cap);
+    }
+    else if(partnerController->getDigital(ControllerDigital::A)) {
+      stickController->control(StickState::ball);
     }
 
     // Temporary

@@ -19,6 +19,7 @@ okapi::MotorGroup* driveRight;
 okapi::Motor* intake;
 okapi::Motor* shooter;
 okapi::Motor* shooterAngle;
+okapi::Motor* stick;
 
 void configure_motors() {
   info("Starting configuration", "config_motors");
@@ -35,6 +36,8 @@ void configure_motors() {
 
   driveLeft->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
   driveRight->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+
+  stick = new okapi::Motor(9, true, AbstractMotor::gearset::green);
   
   intake = new okapi::Motor(11, true, AbstractMotor::gearset::green);
   shooter = new okapi::Motor(13, true, AbstractMotor::gearset::green);

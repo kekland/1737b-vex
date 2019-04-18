@@ -10,6 +10,7 @@ extern std::shared_ptr<okapi::ChassisControllerIntegrated> drivetrain;
 extern BaseIntakeController* intakeController;
 extern SimpleShooterController* shooterController;
 extern BaseShooterAngleController* shooterAngleController;
+extern BaseStickController* stickController;
 
 void configure_controllers();
 

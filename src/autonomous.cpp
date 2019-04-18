@@ -38,13 +38,15 @@ void shootTwice(void *param)
   intakeController->control(IntakeDirection::up);
 }
 
-void getBallUntilBallIsInIntake(void* param) {
+void getBallUntilBallIsInIntake(void *param)
+{
   intakeController->getBallUntilBallIsInIntake(NULL);
 }
 
-void matchRun1(Alliance alliance) {
-  double turnMultiplier = (alliance == Alliance::red)? -1.0 : 1.0;
-  Flag flagToShoot = (alliance == Alliance::red)? Flag::blue : Flag::red;
+void matchRun1(Alliance alliance)
+{
+  double turnMultiplier = (alliance == Alliance::red) ? -1.0 : 1.0;
+  Flag flagToShoot = (alliance == Alliance::red) ? Flag::blue : Flag::red;
 
   shooterAngleController->control(ShooterAngle::upFlag);
 
@@ -52,7 +54,7 @@ void matchRun1(Alliance alliance) {
   drive(3.85_ft);
   driveLeft->moveVoltage(-2500);
   driveRight->moveVoltage(-2500);
-  
+
   //intakeController->control(IntakeDirection::stop);
   drive(-3.4_ft);
   turn(90.0_deg, turnMultiplier);
@@ -60,12 +62,12 @@ void matchRun1(Alliance alliance) {
   drive(0.2_ft);
   shooterController->shootTwice();
   intakeController->control(IntakeDirection::up);
-  
-  driveLeft->moveVoltage((alliance == Alliance::red)? 10000 : 12000);
-  driveRight->moveVoltage((alliance == Alliance::red)? 12000 : 10000);
+
+  driveLeft->moveVoltage((alliance == Alliance::red) ? 10000 : 12000);
+  driveRight->moveVoltage((alliance == Alliance::red) ? 12000 : 10000);
   pros::delay(750);
-  driveLeft->moveVoltage((alliance == Alliance::red)? 8000 : 7000);
-  driveRight->moveVoltage((alliance == Alliance::red)? 7000 : 8000);
+  driveLeft->moveVoltage((alliance == Alliance::red) ? 8000 : 7000);
+  driveRight->moveVoltage((alliance == Alliance::red) ? 7000 : 8000);
   pros::delay(600);
   driveLeft->moveVoltage(6000);
   driveRight->moveVoltage(6000);
@@ -84,51 +86,52 @@ void matchRun1(Alliance alliance) {
   drive(-5.815_ft);
 }
 
-void matchRun3(Alliance alliance) {
-  double turnMultiplier = (alliance == Alliance::red)? -1.0 : 1.0;
-  Flag flagToShoot = (alliance == Alliance::red)? Flag::blue : Flag::red;
-  
-  shooterAngleController->control(ShooterAngle::upFlag);
+void matchRun3(Alliance alliance)
+{
+  double turnMultiplier = (alliance == Alliance::red) ? -1.0 : 1.0;
+  Flag flagToShoot = (alliance == Alliance::red) ? Flag::blue : Flag::red;
 
-  intakeController->control(IntakeDirection::up);
+  shooterAngleController->control(ShooterAngle::upFlag);
+  stickController->control(StickState::zero);
+
+  pros::Task(getBallUntilBallIsInIntake, NULL);
   drive(3.85_ft);
   driveLeft->moveVoltage(-2500);
   driveRight->moveVoltage(-2500);
   pros::delay(275);
   //intakeController->control(IntakeDirection::stop);
-  drive(-3.4_ft);
-  intakeController->control(IntakeDirection::down);
-  pros::delay(250);
-  intakeController->control(IntakeDirection::stop);
+  drive(-3.6_ft);
   turn(90.0_deg, turnMultiplier);
-  aimAndZoomAutomated(flagToShoot);
+  aimForFlag(flagToShoot);
   drive(-0.3_ft);
   shooterController->shootTwice();
   intakeController->control(IntakeDirection::up);
 
-  driveLeft->moveVoltage((alliance == Alliance::red)? 10000 : 12000);
-  driveRight->moveVoltage((alliance == Alliance::red)? 12000 : 10000);
+  driveLeft->moveVoltage((alliance == Alliance::red) ? 10500 : 12000);
+  driveRight->moveVoltage((alliance == Alliance::red) ? 12000 : 10500);
   pros::delay(750);
-  driveLeft->moveVoltage((alliance == Alliance::red)? 8000 : 7500);
-  driveRight->moveVoltage((alliance == Alliance::red)? 7500 : 8000);
+  driveLeft->moveVoltage((alliance == Alliance::red) ? 8000 : 7000);
+  driveRight->moveVoltage((alliance == Alliance::red) ? 7000 : 8000);
   pros::delay(600);
-  driveLeft->moveVoltage(5200);
-  driveRight->moveVoltage(5200);
+  driveLeft->moveVoltage(8000);
+  driveRight->moveVoltage(8000);
   pros::delay(500);
   drive(-3.8_ft);
   pros::delay(500);
+  stickController->control(StickState::cap);
   intakeController->control(IntakeDirection::down);
   turn(-53.0_deg, turnMultiplier);
   //intakeController->control(IntakeDirection::down);
   pros::Task(shootOnce, NULL);
-  drive(3.95_ft);
-  turn(50.5_deg, turnMultiplier);
-  drive(-5.915_ft);
+  drive(1.35_ft);
+  //turn(50.5_deg, turnMultiplier);
+  //drive(-5.915_ft);
 }
-void matchRun2(Alliance alliance) {
-  double turnMultiplier = (alliance == Alliance::red)? -1.0 : 1.0;
-  Flag flagToShoot = (alliance == Alliance::red)? Flag::blue : Flag::red;
-  
+void matchRun2(Alliance alliance)
+{
+  double turnMultiplier = (alliance == Alliance::red) ? -1.0 : 1.0;
+  Flag flagToShoot = (alliance == Alliance::red) ? Flag::blue : Flag::red;
+
   shooterAngleController->control(ShooterAngle::upFlag);
 
   intakeController->control(IntakeDirection::up);
@@ -147,11 +150,11 @@ void matchRun2(Alliance alliance) {
   shooterController->shootTwice();
   intakeController->control(IntakeDirection::up);
 
-  driveLeft->moveVoltage((alliance == Alliance::red)? 9800 : 12000);
-  driveRight->moveVoltage((alliance == Alliance::red)? 12000 : 9800);
+  driveLeft->moveVoltage((alliance == Alliance::red) ? 9800 : 12000);
+  driveRight->moveVoltage((alliance == Alliance::red) ? 12000 : 9800);
   pros::delay(750);
-  driveLeft->moveVoltage((alliance == Alliance::red)? 8000 : 7500);
-  driveRight->moveVoltage((alliance == Alliance::red)? 7500 : 8000);
+  driveLeft->moveVoltage((alliance == Alliance::red) ? 8000 : 7500);
+  driveRight->moveVoltage((alliance == Alliance::red) ? 7500 : 8000);
   pros::delay(600);
   driveLeft->moveVoltage(5200);
   driveRight->moveVoltage(5200);
@@ -165,7 +168,7 @@ void matchRun2(Alliance alliance) {
   intakeController->control(IntakeDirection::down);
   shooterAngleController->control(ShooterAngle::downFlag);
   shooterController->shootOnce();
-  intakeController->control(IntakeDirection::up);
+  /*intakeController->control(IntakeDirection::up);
   driveLeft->moveVelocity(160.0);
   driveRight->moveVelocity(160.0);
   pros::delay(350);
@@ -175,7 +178,7 @@ void matchRun2(Alliance alliance) {
   pros::delay(1000);
   aimAndZoomAutomated(flagToShoot);
   shooterAngleController->control(ShooterAngle::upFlag);
-  shooterController->shootOnce();
+  shooterController->shootOnce();*/
 
   //shooterController->shootTwice();
   //intake->moveVelocity(-100);
@@ -187,18 +190,19 @@ void matchRun2(Alliance alliance) {
   drive(-5.915_ft);*/
 }
 
-void matchRun4(Alliance alliance) {
-  double turnMultiplier = (alliance == Alliance::red)? -1.0 : 1.0;
-  Flag flagToShoot = (alliance == Alliance::red)? Flag::blue : Flag::red;
-  
+void matchRun4(Alliance alliance)
+{
+  double turnMultiplier = (alliance == Alliance::red) ? -1.0 : 1.0;
+  Flag flagToShoot = (alliance == Alliance::red) ? Flag::blue : Flag::red;
+
   shooterAngleController->control(ShooterAngle::upFlag);
 
   drive(1.8_ft);
   turn(90.0_deg, turnMultiplier);
   //intakeController->control(IntakeDirection::down);
   intake->moveVelocity(-175.0);
-  drive(3.75_ft);
-  drive(-2.5_ft);
+  drive(3.95_ft);
+  drive(-2.7_ft);
   turn(90.0_deg, turnMultiplier);
   drive(1.8_ft);
   turn(-90.0_deg, turnMultiplier);
@@ -214,8 +218,14 @@ void matchRun4(Alliance alliance) {
   driveRight->moveVoltage(0);
   pros::delay(500);
   drive(-0.15_ft);
-  turn(-10.5_deg, turnMultiplier);
-  shootTwice(NULL);
+  turn(-9.5_deg, turnMultiplier);
+  shooterAngleController->motorController->setTarget(13.0);
+  shooterController->shootOnce();
+  intakeController->control(IntakeDirection::up);
+  pros::delay(500);
+  shooterAngleController->motorController->setTarget(45.0);
+  shooterController->shootOnce();
+
   turn(10.5_deg, turnMultiplier);
 
   //turn(-170.0_deg, turnMultiplier);
@@ -223,10 +233,11 @@ void matchRun4(Alliance alliance) {
   //drive(-4_ft);
 }
 
-void matchRun5(Alliance alliance) {
-  double turnMultiplier = (alliance == Alliance::red)? -1.0 : 1.0;
-  Flag flagToShoot = (alliance == Alliance::red)? Flag::blue : Flag::red;
-  
+void matchRun5(Alliance alliance)
+{
+  double turnMultiplier = (alliance == Alliance::red) ? -1.0 : 1.0;
+  Flag flagToShoot = (alliance == Alliance::red) ? Flag::blue : Flag::red;
+
   shooterAngleController->control(ShooterAngle::upFlag);
 
   pros::Task(getBallUntilBallIsInIntake, NULL);
@@ -251,10 +262,10 @@ void matchRun5(Alliance alliance) {
   drive(-3.25_ft);
 }
 
-
-void skillsRun2() {
+void skillsRun2()
+{
   Flag flagToShoot = Flag::blue;
-  
+
   shooterAngleController->control(ShooterAngle::upFlag);
 
   intakeController->control(IntakeDirection::up);
@@ -319,16 +330,200 @@ void skillsRun2() {
   drive(12_ft);
 }
 
-void skillsRun() {
+void skillsRun()
+{
   matchRun1(Alliance::red);
   turn(-90_deg);
   drive(-2.9_ft);
 }
 
+void matchRun6(Alliance alliance)
+{
+  double turnMultiplier = (alliance == Alliance::red) ? -1.0 : 1.0;
+  Flag flagToShoot = (alliance == Alliance::red) ? Flag::blue : Flag::red;
+
+  shooterAngleController->control(ShooterAngle::upFlag);
+
+  pros::Task(getBallUntilBallIsInIntake, NULL);
+  drive(3.6_ft);
+  drive(-0.18_ft);
+  pros::delay(250);
+  turn(90.0_deg, turnMultiplier);
+  driveLeft->moveVoltage(3500);
+  driveRight->moveVoltage(3500);
+  pros::delay(600);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+  pros::delay(500);
+
+  driveIndependent(-6.2_in, 0_in);
+  pros::delay(100);
+
+  shooterAngleController->motorController->setTarget(11.0);
+  shooterController->shootOnce();
+
+  intakeController->control(IntakeDirection::up);
+  pros::delay(550);
+
+  driveIndependent(-1_in, 0_in);
+  pros::delay(150);
+
+  shooterAngleController->control(ShooterAngle::downFlag);
+  shooterController->shootOnce();
+  intakeController->control(IntakeDirection::up);
+
+  //drive(-0.255_ft);
+  //turn(-25.5_deg, turnMultiplier);
+  /*driveLeft->moveVoltage(4000);
+  driveRight->moveVoltage(4000);
+  pros::delay(500);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);*/
+
+  /*
+  drive(2.0_in);
+  shooterAngleController->motorController->setTarget(0.0);
+  shooterController->shootOnce();
+  intakeController->control(IntakeDirection::down);
+  pros::delay(100);
+  shooterAngleController->motorController->setTarget(40.0);
+  intakeController->control(IntakeDirection::up);
+  pros::delay(550);
+  shooterController->shootOnce();
+  intakeController->control(IntakeDirection::up); */
+}
+
+void skillsRun3()
+{
+  double turnMultiplier = -1.0;
+  Flag flagToShoot = Flag::blue;
+
+  shooterAngleController->control(ShooterAngle::upFlag);
+
+  pros::Task(getBallUntilBallIsInIntake, NULL);
+  stickController->control(StickState::skills);
+  pros::delay(800);
+  drive(3.6_ft);
+  stickController->control(StickState::skillsUp);
+  
+  drive(-0.18_ft);
+  pros::delay(400);
+  
+  turn(90.0_deg, turnMultiplier);
+  
+  driveLeft->moveVoltage(2500);
+  driveRight->moveVoltage(2500);
+  pros::delay(800);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+
+  pros::delay(500);
+  driveWithRight(-6.75_in);
+  // pros::delay(100);
+
+  shooterAngleController->motorController->setTarget(11.0);
+  shooterController->shootOnce();
+  intakeController->control(IntakeDirection::up);
+  pros::delay(1500);
+  //  driveIndependent(0_in, -1_in);
+  shooterAngleController->motorController->setTarget(48.0);
+  shooterController->shootOnce();
+
+
+
+  intakeController->control(IntakeDirection::up);
+  pros::delay(1000);
+  turn(-20.0_deg, turnMultiplier);
+  drive(-3.5_ft);
+  turn(-35.0_deg, turnMultiplier);
+  
+  driveLeft->moveVoltage(-8000);
+  driveRight->moveVoltage(-8000);
+  pros::delay(700);
+  driveLeft->moveVoltage(-2350);
+  driveRight->moveVoltage(-2350);
+  pros::delay(1200);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+  pros::delay(300);
+
+  drive(3.10_ft);
+  stickController->control(StickState::cap);
+  pros::delay(1000);
+  intakeController->control(IntakeDirection::up);
+  drive(-0.5_ft);
+  stickController->control(StickState::skillsUp);
+  drive(-1_ft);
+
+  stickController->control(StickState::floor);
+  drive(1.15_ft);
+  stickController->flipCap();
+  pros::delay(700);
+
+  drive(-3.3_ft);
+
+  intakeController->control(IntakeDirection::down);
+  pros::delay(400);
+  intakeController->control(IntakeDirection::stop);
+
+  turn(-92_deg, 1.0);
+  driveLeft->moveVoltage(-2350);
+  driveRight->moveVoltage(-2350);
+  pros::delay(1300);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+
+  stickController->control(StickState::skillsUp);
+
+  drive(6.3_ft);
+  aimForFlag(Flag::blue);
+  shooterController->shootTwice();
+  
+  drive(0.8_ft);
+  turn(90.0_deg, 1.0);
+  driveLeft->moveVoltage(-2350);
+  driveRight->moveVoltage(-2350);
+  pros::delay(1000);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+  
+  drive(1_ft);
+  turn(-45.0_deg, 1.0);
+
+  drive(0.65_ft);
+  stickController->control(StickState::cap);
+  pros::delay(1000);
+  intakeController->control(IntakeDirection::up);
+  drive(-0.5_ft);
+  stickController->control(StickState::skillsUp);
+  drive(-1_ft);
+
+  stickController->control(StickState::floor);
+  drive(1.15_ft);
+  stickController->flipCap();
+  pros::delay(1200);
+
+  turn(-3.0_deg, 1.0);
+  drive(-1.9_ft);
+  turn(45.0_deg, 1.0);
+  driveLeft->moveVoltage(-2350);
+  driveRight->moveVoltage(-2350);
+  pros::delay(1000);
+  stickController->control(StickState::floor);
+  pros::delay(800);
+  
+  drive(4.5_ft);
+  turn(-90_deg, 1.0);
+  intakeController->control(IntakeDirection::down);
+  pros::delay(400);
+  intakeController->control(IntakeDirection::stop);
+  pros::delay(400);
+  shooterController->shootTwice();
+}
 void autonomous()
 {
   info("Autonomous start", "autonomous");
   gameState->autonStarted();
   //matchRun2(Alliance::blue);
-  matchRun5(Alliance::blue);
+  skillsRun3();
 }
