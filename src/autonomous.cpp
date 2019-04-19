@@ -332,9 +332,168 @@ void skillsRun2()
 
 void skillsRun()
 {
-  matchRun1(Alliance::red);
+
+  shooterAngleController->control(ShooterAngle::upFlag);
+  int turnMultiplier = -1.0;
+  pros::Task(getBallUntilBallIsInIntake, NULL);
+  stickController->control(StickState::skills);
+  //pros::delay(800);
+  drive(3.6_ft);
+  stickController->control(StickState::skillsUp);
+
+  drive(-0.28_ft);
+  pros::delay(100);
+
+  turn(90.0_deg, turnMultiplier);
+
+  driveLeft->moveVoltage(2500);
+  driveRight->moveVoltage(2500);
+  pros::delay(1500);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+
+  pros::delay(100);
+  driveWithRight(-6.65_in);
+  // pros::delay(100);
+
+  shooterAngleController->motorController->setTarget(18.0);
+  shooterController->shootOnce();
+  intakeController->control(IntakeDirection::up);
+  pros::delay(800);
+  //  driveIndependent(0_in, -1_in);
+  shooterAngleController->motorController->setTarget(48.5);
+  shooterController->shootOnce();
+
+  pros::delay(200);
+  turn(-10.0_deg, turnMultiplier);
+  drive(-3.13_ft);
+  turn(-54.0_deg, turnMultiplier);
+
+  drive(0.85_ft);
+  //turn(5.0_deg, turnMultiplier);
+  stickController->control(StickState::cap);
+  //pros::delay(500);
+  intakeController->control(IntakeDirection::up);
+  //drive(0.25_ft);
+  drive(-0.5_ft);
+  stickController->control(StickState::skillsUp);
+  drive(-1_ft);
+
+  stickController->control(StickState::floor);
+  drive(1.05_ft);
+  stickController->flipCap();
+  drive(-0.1_ft);
+  pros::delay(1000);
+  turn(-90.0_deg);
+  driveLeft->moveVoltage(-2000);
+  driveRight->moveVoltage(-2000);
+  pros::delay(800);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+  intakeController->control(IntakeDirection::down);
+  pros::delay(300);
+  intakeController->control(IntakeDirection::stop);
+  drive(2.50_ft);
+  driveLeft->moveVoltage(2000);
+  driveRight->moveVoltage(2000);
+  pros::delay(2000);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+  driveWithRight(-3.0_in);
+  shooterAngleController->motorController->setTarget(13.0);
+  shooterController->shootOnce();
+  intakeController->control(IntakeDirection::up);
+  pros::delay(500);
+  //  driveIndependent(0_in, -1_in);
+  shooterAngleController->motorController->setTarget(55.5);
+  shooterController->shootOnce();
+  pros::delay(500);
+  drive(-0.1_ft);
+  turn(85.0_deg);
+  intakeController->control(IntakeDirection::down);
+
+  driveLeft->moveVoltage(-7000);
+  driveRight->moveVoltage(-7000);
+  pros::delay(1200);
+  driveLeft->moveVoltage(-2000);
+  driveRight->moveVoltage(-2000);
+  pros::delay(1400);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+  drive(0.5_ft);
+  pros::delay(500);
+  turn(-90.0_deg);
+  driveLeft->moveVoltage(-6000);
+  driveRight->moveVoltage(-6000);
+  pros::delay(900);
+  driveLeft->moveVoltage(-2000);
+  driveRight->moveVoltage(-2000);
+  pros::delay(2000);
+  drive(6.4_ft);
+
+  pros::delay(100);
+  turn(45_deg);
+  intakeController->control(IntakeDirection::stop);
+  drive(1.48_ft);
+  stickController->control(StickState::cap);
+  //pros::delay(1000);
+  intakeController->control(IntakeDirection::up);
+  drive(-0.5_ft);
+  stickController->control(StickState::skillsUp);
+  drive(-1_ft);
+
+  stickController->control(StickState::floor);
+  drive(1.05_ft);
+  stickController->flipCap();
+  drive(-1.55_ft);
+  turn(-43_deg);
+  drive(0.1_ft);
+  intakeController->control(IntakeDirection::down);
+  pros::delay(300);
+  intakeController->control(IntakeDirection::stop);
+  aimForFlag(Flag::blue);
+  shootTwice(NULL);
+  turn(-5_deg);
+  stickController->control(StickState::flag);
+  intakeController->control(IntakeDirection::down);
+
+  drive(3.0_ft);
+  pros::delay(1000);
+  drive(-3.75_ft);
+  turn(90_deg);
+
+  drive(4.5_ft);
+  drive(-2_ft);
+
   turn(-90_deg);
-  drive(-2.9_ft);
+  driveLeft->moveVoltage(-12000);
+  driveRight->moveVoltage(-12000);
+  pros::delay(2200);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+  turn(-90_deg);
+  driveLeft->moveVoltage(-12000);
+  driveRight->moveVoltage(-12000);
+  pros::delay(2200);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+
+  /*
+  driveLeft->moveVoltage(-2000);
+  driveRight->moveVoltage(-2000);
+  pros::delay(3000);
+  driveLeft->moveVoltage(12000);
+  driveRight->moveVoltage(12000);
+  pros::delay(2200);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0);
+
+  pros::delay(5000);
+  driveLeft->moveVoltage(-12000);
+  driveRight->moveVoltage(-12000);
+  pros::delay(2400);
+  driveLeft->moveVoltage(0);
+  driveRight->moveVoltage(0); */
 }
 
 void matchRun6(Alliance alliance)
@@ -405,23 +564,23 @@ void skillsRun3()
   //pros::delay(800);
   drive(3.6_ft);
   stickController->control(StickState::skillsUp);
-  
+
   drive(-0.18_ft);
   pros::delay(100);
-  
+
   turn(90.0_deg, turnMultiplier);
-  
+
   driveLeft->moveVoltage(2500);
   driveRight->moveVoltage(2500);
-  pros::delay(1000);
+  pros::delay(1500);
   driveLeft->moveVoltage(0);
   driveRight->moveVoltage(0);
 
   pros::delay(100);
-  driveWithRight(-6.75_in);
+  driveWithRight(-6.55_in);
   // pros::delay(100);
 
-  shooterAngleController->motorController->setTarget(13.0);
+  shooterAngleController->motorController->setTarget(18.0);
   shooterController->shootOnce();
   intakeController->control(IntakeDirection::up);
   pros::delay(500);
@@ -429,17 +588,15 @@ void skillsRun3()
   shooterAngleController->motorController->setTarget(48.5);
   shooterController->shootOnce();
 
-
-
   intakeController->control(IntakeDirection::stop);
   pros::delay(200);
   turn(-20.0_deg, turnMultiplier);
   drive(-3.5_ft);
-  turn(-44.0_deg, turnMultiplier);
-  
+  turn(-40.0_deg, turnMultiplier);
+
   driveLeft->moveVoltage(-10000);
   driveRight->moveVoltage(-10000);
-  pros::delay(500);
+  pros::delay(600);
   driveLeft->moveVoltage(-2850);
   driveRight->moveVoltage(-2850);
   pros::delay(500);
@@ -483,7 +640,7 @@ void skillsRun3()
   stickController->control(StickState::skillsUp);
 
   drive(6.15_ft);
-  //aimForFlag(Flag::blue);
+  aimForFlag(Flag::blue);
   shooterController->shootTwice();
   intakeController->control(IntakeDirection::down);
 
@@ -500,7 +657,7 @@ void skillsRun3()
   pros::delay(1000);
   driveLeft->moveVoltage(0);
   driveRight->moveVoltage(0);
-  
+
   drive(1.1_ft);
   turn(-45.0_deg, 1.0);
 
@@ -527,17 +684,17 @@ void skillsRun3()
   driveLeft->moveVoltage(-2850);
   driveRight->moveVoltage(-2850);
   pros::delay(1000);
+  intakeController->control(IntakeDirection::down);
+  pros::delay(300);
   intakeController->control(IntakeDirection::stop);
-  stickController->control(StickState::skills);
+
+  stickController->control(StickState::floor);
   //pros::delay(800);
 
   drive(4.55_ft);
   stickController->control(StickState::skillsUp);
   //stickController->flipCap();
-  intakeController->control(IntakeDirection::down);
   pros::delay(300);
-  intakeController->control(IntakeDirection::stop);
-  pros::delay(200);
   turn(-90_deg, 1.0);
   stickController->control(StickState::skillsUp);
   aimForFlag(Flag::blue);
@@ -556,5 +713,5 @@ void autonomous()
   info("Autonomous start", "autonomous");
   gameState->autonStarted();
   //matchRun2(Alliance::blue);
-  skillsRun3();
+  skillsRun();
 }
