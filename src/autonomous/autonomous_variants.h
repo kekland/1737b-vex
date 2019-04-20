@@ -3,6 +3,6 @@
 #ifndef AUTONOMOUS_VARIANTS_H_
 #define AUTONOMOUS_VARIANTS_H_
 
-//void autonomousFront1();
+void skillsRun();
 
 #endif

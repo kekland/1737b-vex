@@ -17,7 +17,7 @@ void SimpleStickController::control(StickState state)
     target = 723.0;
   }
   else if(state == StickState::skills) {
-    target = 684.0;
+    target = 694.0;
   }
   else if(state == StickState::skillsUp) {
     target = 627.0;
@@ -41,10 +41,10 @@ void SimpleStickController::controlSet(double velocity) {
 void SimpleStickController::flipCap() {
   control(StickState::floor);
   controller->waitUntilSettled();
-  driveLeft->moveVoltage(2750);
-  driveRight->moveVoltage(2750);
-  controlSet(-0.45);
-  pros::delay(235);
+  //driveLeft->moveVoltage(2750);
+  //driveRight->moveVoltage(2750);
+  controlSet(-0.345);
+  pros::delay(465);
   controlSet(0.0);
   driveLeft->moveVoltage(0);
   driveRight->moveVoltage(0);

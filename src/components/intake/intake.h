@@ -16,6 +16,7 @@ public:
   void setMaxVelocity(double);
   double getMaxVelocity();
   void getBallUntilBallIsInIntake(void* params);
+  void releaseBallUntilBallIsInIntake(void* params);
   virtual void control(IntakeDirection direction) = 0;
   virtual bool isBallInIntake() = 0;
 

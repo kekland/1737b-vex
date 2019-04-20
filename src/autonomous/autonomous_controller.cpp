@@ -301,3 +301,33 @@ void turn(QAngle targetDegrees, double turnMultiplier)
   stop();
   info("Finished turning.", "turn");
 }
+
+
+void shootOnce(void *param)
+{
+  pros::delay(300);
+  shooterController->shootOnce();
+}
+
+void shootTwice(void *param)
+{
+  shooterAngleController->control(ShooterAngle::upFlag);
+  shooterController->shootOnce();
+  intakeController->control(IntakeDirection::down);
+  pros::delay(100);
+  shooterAngleController->control(ShooterAngle::downFlag);
+  intakeController->control(IntakeDirection::up);
+  pros::delay(550);
+  shooterController->shootOnce();
+  intakeController->control(IntakeDirection::up);
+}
+
+void getBallUntilBallIsInIntake(void *param)
+{
+  intakeController->getBallUntilBallIsInIntake(NULL);
+}
+
+void releaseBallUntilBallIsInIntake(void *param)
+{
+  intakeController->releaseBallUntilBallIsInIntake(NULL);
+}
