@@ -14,6 +14,8 @@ enum class StickState
   skillsUp = 5,
   floor = 6,
   flag = 7,
+  halfUp = 8,
+  zhangir = 9,
 };
 
 class BaseStickController

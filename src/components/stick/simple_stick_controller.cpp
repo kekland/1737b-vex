@@ -28,6 +28,12 @@ void SimpleStickController::control(StickState state)
   else if(state == StickState::flag) {
     target = 583.0;
   }
+  else if(state == StickState::halfUp) {
+    target = 90.0;
+  }
+  else if(state == StickState::zhangir) {
+    target = 700.0;
+  }
   controller->setTarget(target);
   controller->flipDisable(false);
   controller->waitUntilSettled();
